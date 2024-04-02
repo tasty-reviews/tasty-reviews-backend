@@ -1,10 +1,13 @@
 #실제 DB
 spring: #띄어쓰기 없음
   datasource: #띄어쓰기 2칸
-    url: jdbc:mysql://127.0.0.1:3306/reviews_db
-    username: root
-    password: ehdduq0455
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:tcp://localhost/~/reviews_db
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
 
   jpa: #띄어쓰기 2칸
     hibernate: #띄어쓰기 4칸
@@ -13,3 +16,4 @@ spring: #띄어쓰기 없음
       hibernate: #띄어쓰기 6칸
         show_sql: true #띄어쓰기 8칸
         format_sql: true #띄어쓰기 8칸
+

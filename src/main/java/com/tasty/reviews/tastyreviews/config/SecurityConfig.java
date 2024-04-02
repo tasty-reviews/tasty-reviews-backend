@@ -22,7 +22,7 @@ public class SecurityConfig {
 
         http.
                 authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/join").permitAll()
+                        .requestMatchers("/", "/join").permitAll()
                 );
 
         //csrf 토큰 disable
