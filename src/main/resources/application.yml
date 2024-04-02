@@ -1,11 +1,10 @@
 #실제 DB
 spring: #띄어쓰기 없음
   datasource: #띄어쓰기 2칸
-    url: jdbc:mysql://127.0.0.1:3306/tasty_review_db
+    url: jdbc:mysql://127.0.0.1:3306/reviews_db
     username: root
     password: ehdduq0455
     driver-class-name: com.mysql.cj.jdbc.Driver
-
 
   jpa: #띄어쓰기 2칸
     hibernate: #띄어쓰기 4칸
