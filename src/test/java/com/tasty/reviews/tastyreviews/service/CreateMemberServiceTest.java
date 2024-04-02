@@ -53,7 +53,7 @@ public class CreateMemberServiceTest {
         assertEquals("비밀번호", saveMember.getPassword());
         assertEquals("닉네임1", saveMember.getNickname());
         assertEquals(10, saveMember.getAge());
-//        assertEquals("MALE", saveMember.getGender());
+        assertEquals("남자", saveMember.getGender().getValue());
     }
 
 }
