@@ -17,5 +17,8 @@ public class MemberService {
 
     @Transactional
     public void join(CreateMemberDTO createMemberDTO) {
+        //비밀번호 암호화
+        createMemberDTO.setPassword(encoder.encode(createMemberDTO.getPassword()));
+        memberRepository.save(createMemberDTO.toEntity());
     }
 }
