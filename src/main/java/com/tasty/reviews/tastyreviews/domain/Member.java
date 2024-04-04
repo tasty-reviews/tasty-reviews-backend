@@ -5,7 +5,7 @@ import lombok.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class Member extends BaseTimeEntity{
@@ -14,16 +14,16 @@ public class Member extends BaseTimeEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 45)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String password;
 
     @Column(nullable = false)
     private int age;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 45)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
