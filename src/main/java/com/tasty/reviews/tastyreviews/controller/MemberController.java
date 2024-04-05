@@ -14,10 +14,10 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    //회원가입
     @PostMapping("/join")
     public ResponseEntity<String> join(@RequestBody CreateMemberDTO createMemberDTO) {
         memberService.join(createMemberDTO);
         return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
-
 }
