@@ -26,7 +26,6 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false, unique = true, length = 45)
     private String nickname;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Gender gender;
+    private String gender;
 }
