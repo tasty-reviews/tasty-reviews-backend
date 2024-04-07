@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class RestaurantDTO {
-    private Long restaurantId;
+    private Long id;
     private String name;
     private String category;
     private String description;
@@ -20,7 +20,7 @@ public class RestaurantDTO {
     // 엔티티로 변환하는 메서드
     public Restaurant toEntity() {
         return Restaurant.builder()
-                .restaurant_id(this.restaurantId)
+                .id(this.id)
                 .name(this.name)
                 .category(this.category)
                 .description(this.description)
@@ -33,7 +33,7 @@ public class RestaurantDTO {
     // 정적 팩토리 메서드를 이용한 DTO 생성
     public static RestaurantDTO fromEntity(Restaurant restaurant) {
         return RestaurantDTO.builder()
-                .restaurantId(restaurant.getRestaurant_id())
+                .id(restaurant.getId())
                 .name(restaurant.getName())
                 .category(restaurant.getCategory())
                 .description(restaurant.getDescription())

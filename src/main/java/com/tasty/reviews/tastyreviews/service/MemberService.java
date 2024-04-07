@@ -1,6 +1,6 @@
 package com.tasty.reviews.tastyreviews.service;
 
-import com.tasty.reviews.tastyreviews.dto.CreateMemberDTO;
+import com.tasty.reviews.tastyreviews.dto.MemberDTO;
 import com.tasty.reviews.tastyreviews.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,15 +18,15 @@ public class MemberService {
     private final BCryptPasswordEncoder encoder;
 
     @Transactional
-    public void join(CreateMemberDTO createMemberDTO) {
+    public void join(MemberDTO memberDTO) {
 
-        log.info("암호화 전 : {}", createMemberDTO.getPassword());
+        log.info("암호화 전 : {}", memberDTO.getPassword());
 
-        String encodedPassword = encoder.encode(createMemberDTO.getPassword());
-        createMemberDTO.setPassword(encodedPassword); // 비밀번호 암호화
+        String encodedPassword = encoder.encode(memberDTO.getPassword());
+        memberDTO.setPassword(encodedPassword); // 비밀번호 암호화
 
         log.info("암호화 후 : {}", encodedPassword);
 
-        memberRepository.save(createMemberDTO.toEntity()); // 저장
+        memberRepository.save(memberDTO.toEntity()); // 저장
     }
 }

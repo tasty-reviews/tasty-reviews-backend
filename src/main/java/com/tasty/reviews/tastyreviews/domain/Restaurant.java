@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -19,7 +17,7 @@ public class Restaurant extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Restaurant_Id")
-    private Long restaurant_id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -39,7 +37,7 @@ public class Restaurant extends BaseTimeEntity {
     @Column(nullable = false)
     private String address;
 
-    // 여러 개의 리뷰를 저장하기 위한 Set
+    // 여러 개의 리뷰를 저장하기 위한 List
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
 

@@ -1,6 +1,6 @@
 package com.tasty.reviews.tastyreviews.controller;
 
-import com.tasty.reviews.tastyreviews.dto.CreateMemberDTO;
+import com.tasty.reviews.tastyreviews.dto.MemberDTO;
 import com.tasty.reviews.tastyreviews.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +16,8 @@ public class MemberController {
 
     //회원가입
     @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestBody CreateMemberDTO createMemberDTO) {
-        memberService.join(createMemberDTO);
+    public ResponseEntity<String> join(@RequestBody MemberDTO memberDTO) {
+        memberService.join(memberDTO);
         return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
 }

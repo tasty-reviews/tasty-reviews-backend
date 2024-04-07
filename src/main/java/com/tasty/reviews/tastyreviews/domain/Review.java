@@ -7,8 +7,9 @@ import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class Review extends BaseTimeEntity {
 
@@ -18,7 +19,7 @@ public class Review extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "Member_id", nullable = false)
+   // @JoinColumn(name = "Member_id", nullable = false)
     private Member member;
 
     @ManyToOne
@@ -34,4 +35,5 @@ public class Review extends BaseTimeEntity {
     private String comment;
 
     private String imageURL;
+
 }
