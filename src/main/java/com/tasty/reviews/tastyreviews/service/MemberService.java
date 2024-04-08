@@ -20,6 +20,12 @@ public class MemberService {
     @Transactional
     public void join(CreateMemberDTO createMemberDTO) {
 
+        //email 중복체크
+        memberRepository.findByEmail(createMemberDTO.getEmail())
+                .ifPresent(member -> {
+                    throw new RuntimeException(createMemberDTO.getEmail() + "은 이미 사용중인 이메일 입니다");
+                });
+
         log.info("암호화 전 : {}", createMemberDTO.getPassword());
 
         String encodedPassword = encoder.encode(createMemberDTO.getPassword());
