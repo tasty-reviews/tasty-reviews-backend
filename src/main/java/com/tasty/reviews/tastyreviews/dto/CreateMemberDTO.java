@@ -2,6 +2,7 @@ package com.tasty.reviews.tastyreviews.dto;
 
 import com.tasty.reviews.tastyreviews.domain.Member;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +26,8 @@ public class CreateMemberDTO { //회원가입에서 클라이언트가 보낸 �
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")
     private String nickname;
 
-    @NotBlank(message = "나이는 필수 입력값 입니다.")
-    private int age;
+    @NotNull(message = "나이는 필수 입력값 입니다.")
+    private Integer age;
 
     private String gender;
 
