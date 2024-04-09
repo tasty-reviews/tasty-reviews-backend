@@ -20,12 +20,14 @@ public class MemberService {
     @Transactional
     public void join(CreateMemberDTO createMemberDTO) {
 
-        //email 중복체크
-        memberRepository.findByEmail(createMemberDTO.getEmail())
-                .ifPresent(member -> {
-                    throw new RuntimeException(createMemberDTO.getEmail() + "은 이미 사용중인 이메일 입니다");
-                });
+        Boolean isExist = memberRepository.existsByEmail(createMemberDTO.getEmail());
 
+        //중복된 이메일이 존재할 경우 회원가입 x
+        if(isExist) {
+            return;
+        }
+
+        //중복된 이메일이 존재하지 않을경우 회원가입 진행
         log.info("암호화 전 : {}", createMemberDTO.getPassword());
 
         String encodedPassword = encoder.encode(createMemberDTO.getPassword());
@@ -34,5 +36,14 @@ public class MemberService {
         log.info("암호화 후 : {}", encodedPassword);
 
         memberRepository.save(createMemberDTO.toEntity()); // 저장
+    }
+
+    @Transactional
+    public String login(String emali, String password) {
+        //email 없음
+
+        //password 틀림
+
+        return "토큰";
     }
 }
