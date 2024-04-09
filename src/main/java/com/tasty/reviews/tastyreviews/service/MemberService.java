@@ -20,12 +20,15 @@ public class MemberService {
     @Transactional
     public void join(CreateMemberDTO createMemberDTO) {
 
-        Boolean isExist = memberRepository.existsByEmail(createMemberDTO.getEmail());
+        memberRepository.findByEmail(createMemberDTO.getEmail())
+                .ifPresent( m -> {
+                    throw new IllegalStateException("이미 가입된 이메일 입니다");
+                });
 
-        //중복된 이메일이 존재할 경우 회원가입 x
-        if(isExist) {
-            return;
-        }
+        memberRepository.findByNickname(createMemberDTO.getNickname())
+                .ifPresent( m -> {
+                    throw new IllegalStateException("이미 존재하는 닉네임 입니다.");
+                });
 
         //중복된 이메일이 존재하지 않을경우 회원가입 진행
         log.info("암호화 전 : {}", createMemberDTO.getPassword());
