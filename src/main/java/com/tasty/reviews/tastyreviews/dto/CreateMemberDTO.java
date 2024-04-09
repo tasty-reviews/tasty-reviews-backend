@@ -1,6 +1,8 @@
 package com.tasty.reviews.tastyreviews.dto;
 
 import com.tasty.reviews.tastyreviews.domain.Member;
+import com.tasty.reviews.tastyreviews.domain.Role;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -15,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateMemberDTO { //회원가입에서 클라이언트가 보낸 정보를 전달하는 DTO
 
-    @Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$", message = "이메일 형식이 올바르지 않습니다.")
+    @Email
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
     private String email;
 
@@ -31,14 +33,18 @@ public class CreateMemberDTO { //회원가입에서 클라이언트가 보낸 �
 
     private String gender;
 
+    private Role role;
+
     /*DTO -> Entity*/
     public Member toEntity() {
         return Member.builder()
                 .email(email)
                 .password(password)
                 .nickname(nickname)
-                .gender(gender)
                 .age(age)
+                .gender(gender)
+                .role(Role.USER)
                 .build();
     }
+
 }
