@@ -4,6 +4,9 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+  jwt:
+    secret: dljfjaldkfjaksldfjaldkfjlkadsfjakslfjafejfopajdiofjaiodfdlksfjakldfjakldsf
+
   h2:
     console:
       enabled: true
@@ -21,5 +24,6 @@ logging:
     org:
       springframework:
         security: DEBUG # Spring Security 로그 레벨 설정
+
       hibernate:
         SQL: DEBUG # Hibernate SQL 로그 레벨 설정

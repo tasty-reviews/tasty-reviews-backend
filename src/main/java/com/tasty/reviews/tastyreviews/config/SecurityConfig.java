@@ -1,5 +1,8 @@
 package com.tasty.reviews.tastyreviews.config;
 
+import com.tasty.reviews.tastyreviews.jwt.JWTFilter;
+import com.tasty.reviews.tastyreviews.jwt.JWTUtil;
+import com.tasty.reviews.tastyreviews.jwt.LoginFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +23,7 @@ public class SecurityConfig {
 
     //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final JWTUtil jwtUtil;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -41,12 +46,19 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable) //http 인증 방식 disable
                 .csrf(AbstractHttpConfigurer::disable) // csrk disable
 
-                .authorizeHttpRequests(
-                        (auth) -> auth
-                                .requestMatchers("/login", "/", "/join")
-                                .permitAll()
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/", "/main", "/join")
+                        .permitAll()
+                        .requestMatchers("/admin")
+                        .hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 );
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+
+        http
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
 
         http
                 .sessionManagement((session) -> session
