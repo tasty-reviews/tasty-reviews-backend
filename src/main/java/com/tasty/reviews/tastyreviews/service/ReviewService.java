@@ -62,7 +62,7 @@ public class ReviewService {
         // 리뷰에 회원 정보 설정
         review.setMember(member);
 
-        // 리뷰 저장
+        // 리뷰 저장f
         return reviewRepository.save(review);
     }
 
