@@ -45,24 +45,21 @@ public class ReviewService {
         }
 
         // 사용자의 멤버ID를 추출
-        String memberIdStr = authentication.getName();
-        Long memberId = Long.valueOf(memberIdStr);
+        String email = authentication.getName();
 
-        // 식당 ID를 가진 식당 엔티티를 조회
+        // 사용자 정보 가져오기
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+
+        // 식당 정보 가져오기
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant ID: " + restaurantId));
 
-        // 리뷰에 식당 정보 설정
+        // 리뷰에 식당 및 정보 설정
         review.setRestaurant(restaurant);
-
-        // 사용자의 멤버ID를 가진 멤버 엔티티를 조회
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid member ID: " + memberId));
-
-        // 리뷰에 회원 정보 설정
         review.setMember(member);
 
-        // 리뷰 저장f
+        // 리뷰 저장
         return reviewRepository.save(review);
     }
 
