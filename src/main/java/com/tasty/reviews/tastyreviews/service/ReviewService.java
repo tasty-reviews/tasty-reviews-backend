@@ -66,6 +66,9 @@ public class ReviewService {
     //리뷰 수정
     @Transactional
     public Review updateReview(Long reviewId, Review updatedReview) {
+        // 사용자의 인증 정보를 가져옴
+        isLogined();
+
         // 리뷰 ID를 가진 리뷰 엔티티를 조회
         Review existingReview = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid review ID: " + reviewId));
@@ -82,11 +85,23 @@ public class ReviewService {
     //리뷰 삭제
     @Transactional
     public void deleteReview(Long reviewId) {
+        isLogined();
+
         // 리뷰 ID를 가진 리뷰 엔티티를 조회
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid review ID: " + reviewId));
 
         reviewRepository.delete(review);
+    }
+
+    private static void isLogined() {
+        // 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 사용자가 로그인되어 있는지 확인
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("User must be logged in to create a review");
+        }
     }
 
 }

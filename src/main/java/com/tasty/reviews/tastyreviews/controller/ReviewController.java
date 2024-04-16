@@ -1,7 +1,6 @@
 package com.tasty.reviews.tastyreviews.controller;
 
 import com.tasty.reviews.tastyreviews.domain.Review;
-import com.tasty.reviews.tastyreviews.dto.ReviewDTO;
 import com.tasty.reviews.tastyreviews.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

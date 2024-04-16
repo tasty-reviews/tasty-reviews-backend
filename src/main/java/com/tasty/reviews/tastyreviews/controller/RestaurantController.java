@@ -1,8 +1,6 @@
 package com.tasty.reviews.tastyreviews.controller;
 
-import com.tasty.reviews.tastyreviews.dto.CustomUserDetails;
 import com.tasty.reviews.tastyreviews.dto.RestaurantDTO;
-import com.tasty.reviews.tastyreviews.service.CustomUserDetailsService;
 import com.tasty.reviews.tastyreviews.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
-    private final CustomUserDetailsService customUserDetailsService;
 
     @PostMapping("/add")
     public ResponseEntity<RestaurantDTO> registerRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
