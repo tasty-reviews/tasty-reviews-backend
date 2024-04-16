@@ -23,6 +23,12 @@ public class JWTUtil { //jwt 생성 및 검증 클래스
         key = Keys.hmacShaKeyFor(byteSecretKey);
     }
 
+    //토큰 종류 반환
+    public String getCateory(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("category", String.class);
+    }
+
+
     // 토큰에서 사용자 아이디를 추출하여 반환함.
     public String getUsername(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("username", String.class);
@@ -39,11 +45,13 @@ public class JWTUtil { //jwt 생성 및 검증 클래스
     }
 
     // 주어진 사용자 아이디, 권한 및 만료 시간(ms)을 사용하여 JWT 생성함.
-    public String createJwt(String username, String role, Long expiredMs) {
+    public String createJwt(String category, String username, String role, Long expiredMs) {
         // 클레임(claim) 객체 생성
         Claims claims = Jwts.claims();
+        claims.put("category", category);
         claims.put("username", username); // 사용자 아이디 추가
         claims.put("role", role); // 사용자 권한 추가
+
 
         // JWT 빌더를 사용하여 토큰 생성
         return Jwts.builder()
@@ -53,4 +61,6 @@ public class JWTUtil { //jwt 생성 및 검증 클래스
                 .signWith(key, SignatureAlgorithm.HS256) // 서명 알고리즘 설정
                 .compact(); // 토큰 생성 및 반환
     }
+
+
 }
