@@ -18,11 +18,11 @@ public class Review extends BaseTimeEntity {
     @Column(name = "Review_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Member_id", nullable = false)
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Restaurant_id", nullable = false)
     private Restaurant restaurant;
 
