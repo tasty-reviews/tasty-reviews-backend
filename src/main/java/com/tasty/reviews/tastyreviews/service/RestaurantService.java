@@ -1,8 +1,6 @@
 package com.tasty.reviews.tastyreviews.service;
 
-import com.tasty.reviews.tastyreviews.domain.Member;
 import com.tasty.reviews.tastyreviews.domain.Restaurant;
-import com.tasty.reviews.tastyreviews.domain.Role;
 import com.tasty.reviews.tastyreviews.dto.RestaurantDTO;
 import com.tasty.reviews.tastyreviews.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;

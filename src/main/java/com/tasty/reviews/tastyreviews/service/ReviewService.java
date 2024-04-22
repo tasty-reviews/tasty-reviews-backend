@@ -1,11 +1,11 @@
 package com.tasty.reviews.tastyreviews.service;
 
+import com.tasty.reviews.tastyreviews.domain.Member;
 import com.tasty.reviews.tastyreviews.domain.Restaurant;
 import com.tasty.reviews.tastyreviews.domain.Review;
-import com.tasty.reviews.tastyreviews.domain.Member; // 추가
+import com.tasty.reviews.tastyreviews.repository.MemberRepository;
 import com.tasty.reviews.tastyreviews.repository.RestaurantRepository;
 import com.tasty.reviews.tastyreviews.repository.ReviewRepository;
-import com.tasty.reviews.tastyreviews.repository.MemberRepository; // 추가
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
