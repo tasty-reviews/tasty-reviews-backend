@@ -3,6 +3,7 @@ package com.tasty.reviews.tastyreviews.config;
 import com.tasty.reviews.tastyreviews.jwt.JWTFilter;
 import com.tasty.reviews.tastyreviews.jwt.JWTUtil;
 import com.tasty.reviews.tastyreviews.jwt.LoginFilter;
+import com.tasty.reviews.tastyreviews.repository.RefreshRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,7 @@ public class SecurityConfig {
     //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+    private final RefreshRepository repository;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -63,21 +65,23 @@ public class SecurityConfig {
         http
                 .formLogin(AbstractHttpConfigurer::disable) //form 로그인 방식 disable
                 .httpBasic(AbstractHttpConfigurer::disable) //http 인증 방식 disable
-                .csrf(AbstractHttpConfigurer::disable) // csrk disable
+                .csrf(AbstractHttpConfigurer::disable) // csrf disable
 
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/main", "/join")
                         .permitAll()
                         .requestMatchers("/admin")
                         .hasRole("ADMIN")
+                        .requestMatchers("/reissue")
+                        .permitAll()
                         .anyRequest().authenticated()
+
                 );
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
-        //csrf 토큰 disable
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, repository), UsernamePasswordAuthenticationFilter.class);
 
 
         http

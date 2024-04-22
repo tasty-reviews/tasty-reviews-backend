@@ -1,5 +1,7 @@
 package com.tasty.reviews.tastyreviews.jwt;
 
+import com.tasty.reviews.tastyreviews.domain.RefreshEntity;
+import com.tasty.reviews.tastyreviews.repository.RefreshRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final RefreshRepository refreshRepository;
 
     // 사용자가 로그인을 시도할 때 호출되는 메서드
     @Override
@@ -40,7 +44,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     // 로그인 성공 시 실행되는 메서드
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-
         //유저 정보
         String username = authentication.getName();
 
@@ -53,10 +56,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String access = jwtUtil.createJwt("access", username, role, 600000L);
         String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
 
+        //서버에 리프레시 토큰 저장
+        addRefreshEntity(username, refresh, 86400000L);
+
         //응답 설정
-        response.setHeader("access", access); //헤더에 access 토큰
-        response.addCookie(createCookie("refresh", refresh)); //쿠키에 refresh 토큰
+        response.setHeader("access", access); //헤더에 access 토큰 저장
+        response.addCookie(createCookie("refresh", refresh)); //쿠키에 refresh 토큰 저장
         response.setStatus(HttpStatus.OK.value()); //상태코드 설정
+
     }
 
     // 로그인 실패 시 실행되는 메서드
@@ -66,6 +73,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setStatus(401);
     }
 
+    //쿠키 생성 메서드
     private Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
@@ -75,5 +83,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         cookie.setHttpOnly(true);
 
         return cookie;
+    }
+
+    private void addRefreshEntity(String userEmail, String refresh, Long expiredMs) { //이메일, 리프레시토큰, 만료일자
+
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+        RefreshEntity refreshEntity = new RefreshEntity();
+        refreshEntity.setUserEmail(userEmail);
+        refreshEntity.setRefresh(refresh);
+        refreshEntity.setExpiration(date.toString());
+
+        refreshRepository.save(refreshEntity);
     }
 }

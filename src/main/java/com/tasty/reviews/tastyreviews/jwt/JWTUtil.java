@@ -24,10 +24,9 @@ public class JWTUtil { //jwt 생성 및 검증 클래스
     }
 
     //토큰 종류 반환
-    public String getCateory(String token) {
+    public String getCategory(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("category", String.class);
     }
-
 
     // 토큰에서 사용자 아이디를 추출하여 반환함.
     public String getUsername(String token) {
