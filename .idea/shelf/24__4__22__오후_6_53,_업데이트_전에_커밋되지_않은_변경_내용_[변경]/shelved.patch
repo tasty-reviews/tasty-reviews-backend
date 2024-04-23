@@ -1,0 +1,420 @@
+Index: src/main/java/com/tasty/reviews/tastyreviews/service/RestaurantService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tasty.reviews.tastyreviews.service;\n\nimport com.tasty.reviews.tastyreviews.domain.Member;\nimport com.tasty.reviews.tastyreviews.domain.Restaurant;\nimport com.tasty.reviews.tastyreviews.domain.Role;\nimport com.tasty.reviews.tastyreviews.dto.RestaurantDTO;\nimport com.tasty.reviews.tastyreviews.repository.RestaurantRepository;\nimport lombok.RequiredArgsConstructor;\nimport org.springframework.stereotype.Service;\nimport org.springframework.transaction.annotation.Transactional;\n\n@Service\n@Transactional\n@RequiredArgsConstructor\npublic class RestaurantService {\n\n    private final RestaurantRepository restaurantRepository;\n\n    public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO, String username) {\n/*        // 사용자 역할 확인\n        if (!isAdmin(username)) {\n            throw new IllegalStateException(\"Only administrators can add restaurants.\");\n        }*/\n        // DTO를 엔티티로 변환\n        Restaurant restaurant = restaurantDTO.toEntity();\n\n        // 레스토랑 등록\n        Restaurant savedRestaurant = restaurantRepository.save(restaurant);\n\n        // 등록된 레스토랑 정보를 다시 DTO로 변환하여 반환\n        return RestaurantDTO.fromEntity(savedRestaurant);\n    }\n\n/*    private boolean isAdmin(String username) {\n        // 여기에 사용자 이름(username)을 기반으로 사용자 역할을 확인하는 로직을 추가하세요.\n        // 예를 들어, 사용자 이름으로 데이터베이스에서 해당 사용자를 조회하여 역할을 확인할 수 있습니다.\n        // 이 예제에서는 단순히 \"admin\"이라는 이름을 가진 사용자만이 관리자로 간주합니다.\n        return \"admin\".equals(username);\n    }*/\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/tasty/reviews/tastyreviews/service/RestaurantService.java b/src/main/java/com/tasty/reviews/tastyreviews/service/RestaurantService.java
+--- a/src/main/java/com/tasty/reviews/tastyreviews/service/RestaurantService.java	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
++++ b/src/main/java/com/tasty/reviews/tastyreviews/service/RestaurantService.java	(date 1713248543159)
+@@ -1,8 +1,6 @@
+ package com.tasty.reviews.tastyreviews.service;
+ 
+-import com.tasty.reviews.tastyreviews.domain.Member;
+ import com.tasty.reviews.tastyreviews.domain.Restaurant;
+-import com.tasty.reviews.tastyreviews.domain.Role;
+ import com.tasty.reviews.tastyreviews.dto.RestaurantDTO;
+ import com.tasty.reviews.tastyreviews.repository.RestaurantRepository;
+ import lombok.RequiredArgsConstructor;
+Index: src/main/java/com/tasty/reviews/tastyreviews/service/ReviewService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tasty.reviews.tastyreviews.service;\n\nimport com.tasty.reviews.tastyreviews.domain.Restaurant;\nimport com.tasty.reviews.tastyreviews.domain.Review;\nimport com.tasty.reviews.tastyreviews.domain.Member; // 추가\nimport com.tasty.reviews.tastyreviews.repository.RestaurantRepository;\nimport com.tasty.reviews.tastyreviews.repository.ReviewRepository;\nimport com.tasty.reviews.tastyreviews.repository.MemberRepository; // 추가\nimport lombok.RequiredArgsConstructor;\nimport org.springframework.security.core.Authentication;\nimport org.springframework.security.core.context.SecurityContextHolder;\nimport org.springframework.stereotype.Service;\nimport org.springframework.transaction.annotation.Transactional;\n\nimport java.util.List;\n\n@Service\n@RequiredArgsConstructor\n@Transactional(readOnly = true)\npublic class ReviewService {\n\n    private final ReviewRepository reviewRepository;\n    private final RestaurantRepository restaurantRepository;\n    private final MemberRepository memberRepository; // 추가\n\n    // 특정 레스토랑의 리뷰 조회\n    public List<Review> getReviewsByRestaurantId(Long restaurantId) {\n        return reviewRepository.findByRestaurantId(restaurantId);\n    }\n\n    // 특정 회원의 리뷰 조회\n    public List<Review> getReviewsByMemberId(Long memberId) {\n        return reviewRepository.findByMemberId(memberId);\n    }\n\n    // 리뷰 생성\n    @Transactional\n    public Review createReview(Long restaurantId, Review review) {\n        // 사용자의 인증 정보를 가져옴\n        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();\n\n        // 사용자가 로그인되어 있는지 확인\n        if (authentication == null || !authentication.isAuthenticated()) {\n            throw new IllegalStateException(\"User must be logged in to create a review\");\n        }\n\n        // 사용자의 멤버ID를 추출\n        String email = authentication.getName();\n\n        // 사용자 정보 가져오기\n        Member member = memberRepository.findByEmail(email)\n                .orElseThrow(() -> new IllegalStateException(\"User not found\"));\n\n        // 식당 정보 가져오기\n        Restaurant restaurant = restaurantRepository.findById(restaurantId)\n                .orElseThrow(() -> new IllegalArgumentException(\"Invalid restaurant ID: \" + restaurantId));\n\n        // 리뷰에 식당 및 정보 설정\n        review.setRestaurant(restaurant);\n        review.setMember(member);\n\n        // 리뷰 저장\n        return reviewRepository.save(review);\n    }\n\n    //리뷰 수정\n    @Transactional\n    public Review updateReview(Long reviewId, Review updatedReview) {\n        // 사용자의 인증 정보를 가져옴\n        isLogined();\n\n        // 리뷰 ID를 가진 리뷰 엔티티를 조회\n        Review existingReview = reviewRepository.findById(reviewId)\n                .orElseThrow(() -> new IllegalArgumentException(\"Invalid review ID: \" + reviewId));\n\n        // 업데이트할 내용으로 기존 리뷰를 갱신\n        existingReview.setRating(updatedReview.getRating());\n        existingReview.setComment(updatedReview.getComment());\n        existingReview.setImageURL(updatedReview.getImageURL());\n\n        // 갱신된 리뷰 저장 및 반환\n        return reviewRepository.save(existingReview);\n    }\n\n    //리뷰 삭제\n    @Transactional\n    public void deleteReview(Long reviewId) {\n        isLogined();\n\n        // 리뷰 ID를 가진 리뷰 엔티티를 조회\n        Review review = reviewRepository.findById(reviewId)\n                .orElseThrow(() -> new IllegalArgumentException(\"Invalid review ID: \" + reviewId));\n\n        reviewRepository.delete(review);\n    }\n\n    private static void isLogined() {\n        // 사용자의 인증 정보를 가져옴\n        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();\n\n        // 사용자가 로그인되어 있는지 확인\n        if (authentication == null || !authentication.isAuthenticated()) {\n            throw new IllegalStateException(\"User must be logged in to create a review\");\n        }\n    }\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/tasty/reviews/tastyreviews/service/ReviewService.java b/src/main/java/com/tasty/reviews/tastyreviews/service/ReviewService.java
+--- a/src/main/java/com/tasty/reviews/tastyreviews/service/ReviewService.java	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
++++ b/src/main/java/com/tasty/reviews/tastyreviews/service/ReviewService.java	(date 1713248905431)
+@@ -1,11 +1,11 @@
+ package com.tasty.reviews.tastyreviews.service;
+ 
++import com.tasty.reviews.tastyreviews.domain.Member;
+ import com.tasty.reviews.tastyreviews.domain.Restaurant;
+ import com.tasty.reviews.tastyreviews.domain.Review;
+-import com.tasty.reviews.tastyreviews.domain.Member; // 추가
++import com.tasty.reviews.tastyreviews.repository.MemberRepository;
+ import com.tasty.reviews.tastyreviews.repository.RestaurantRepository;
+ import com.tasty.reviews.tastyreviews.repository.ReviewRepository;
+-import com.tasty.reviews.tastyreviews.repository.MemberRepository; // 추가
+ import lombok.RequiredArgsConstructor;
+ import org.springframework.security.core.Authentication;
+ import org.springframework.security.core.context.SecurityContextHolder;
+Index: src/main/java/com/tasty/reviews/tastyreviews/dto/MemberDTO.java
+===================================================================
+diff --git a/src/main/java/com/tasty/reviews/tastyreviews/dto/MemberDTO.java b/src/main/java/com/tasty/reviews/tastyreviews/dto/MemberDTO.java
+deleted file mode 100644
+--- a/src/main/java/com/tasty/reviews/tastyreviews/dto/MemberDTO.java	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
++++ /dev/null	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
+@@ -1,44 +0,0 @@
+-//package com.tasty.reviews.tastyreviews.dto;
+-//
+-//import com.tasty.reviews.tastyreviews.domain.Gender;
+-//import com.tasty.reviews.tastyreviews.domain.Member;
+-//import lombok.AllArgsConstructor;
+-//import lombok.Builder;
+-//import lombok.Data;
+-//import lombok.NoArgsConstructor;
+-//
+-//@Data
+-//@Builder
+-//@AllArgsConstructor
+-//@NoArgsConstructor
+-//public class MemberDTO { //회원가입에서 클라이언트가 보낸 정보를 전달하는 DTO
+-//
+-//    private Long id;
+-//    private String email;
+-//    private String password;
+-//    private int age;
+-//    private String nickname;
+-//    private Gender gender;
+-//
+-//    public Member toEntity() {
+-//        return Member.builder()
+-//                .id(this.id)
+-//                .email(this.email)
+-//                .password(this.password)
+-//                .age(this.age)
+-//                .nickname(this.nickname)
+-//                .gender(this.gender)
+-//                .build();
+-//    }
+-//
+-//    public static MemberDTO fromEntity(Member member) {
+-//        return MemberDTO.builder()
+-//                .id(member.getId())
+-//                .email(member.getEmail())
+-//                .password(member.getPassword())
+-//                .age(member.getAge())
+-//                .nickname(member.getNickname())
+-//                .gender(member.getGender())
+-//                .build();
+-//    }
+-//}
+\ No newline at end of file
+Index: .idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ProjectModuleManager\">\n    <modules>\n      <module fileurl=\"file://$PROJECT_DIR$/.idea/modules/com.tasty.reviews.tasty-reviews.main.iml\" filepath=\"$PROJECT_DIR$/.idea/modules/com.tasty.reviews.tasty-reviews.main.iml\" />\n      <module fileurl=\"file://$PROJECT_DIR$/.idea/modules/tasty-reviews.iml\" filepath=\"$PROJECT_DIR$/.idea/modules/tasty-reviews.iml\" />\n      <module fileurl=\"file://$PROJECT_DIR$/.idea/modules/tasty-reviews.test.iml\" filepath=\"$PROJECT_DIR$/.idea/modules/tasty-reviews.test.iml\" />\n    </modules>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+--- a/.idea/modules.xml	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
++++ b/.idea/modules.xml	(date 1713283242084)
+@@ -2,9 +2,7 @@
+ <project version="4">
+   <component name="ProjectModuleManager">
+     <modules>
+-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.tasty.reviews.tasty-reviews.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.tasty.reviews.tasty-reviews.main.iml" />
+-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tasty-reviews.iml" filepath="$PROJECT_DIR$/.idea/modules/tasty-reviews.iml" />
+-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tasty-reviews.test.iml" filepath="$PROJECT_DIR$/.idea/modules/tasty-reviews.test.iml" />
++      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tasty-reviews.main.iml" filepath="$PROJECT_DIR$/.idea/modules/tasty-reviews.main.iml" />
+     </modules>
+   </component>
+ </project>
+\ No newline at end of file
+Index: src/main/java/com/tasty/reviews/tastyreviews/domain/Member.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tasty.reviews.tastyreviews.domain;\n\nimport jakarta.persistence.*;\nimport lombok.*;\n\n@Entity\n@Getter\n@NoArgsConstructor(access = AccessLevel.PROTECTED)\n@AllArgsConstructor\n@Builder\npublic class Member extends BaseTimeEntity {\n\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n\n    @Column(nullable = false, unique = true, length = 45)\n    private String email;\n\n    @Column(nullable = false, length = 100)\n    private String password;\n\n    @Column(nullable = false)\n    private int age;\n\n    @Column(nullable = false, unique = true, length = 45)\n    private String nickname;\n\n//    @Enumerated(EnumType.STRING)\n    @Column(nullable = false)\n    private String gender;\n\n    private Role role;\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/tasty/reviews/tastyreviews/domain/Member.java b/src/main/java/com/tasty/reviews/tastyreviews/domain/Member.java
+--- a/src/main/java/com/tasty/reviews/tastyreviews/domain/Member.java	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
++++ b/src/main/java/com/tasty/reviews/tastyreviews/domain/Member.java	(date 1713248217651)
+@@ -26,9 +26,9 @@
+     @Column(nullable = false, unique = true, length = 45)
+     private String nickname;
+ 
+-//    @Enumerated(EnumType.STRING)
+     @Column(nullable = false)
+     private String gender;
+ 
++    @Enumerated(EnumType.STRING)
+     private Role role;
+ }
+\ No newline at end of file
+Index: .gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>### IntelliJ IDEA ###\nout/\n!**/src/main/**/out/\n!**/src/test/**/out/\n\n### Eclipse ###\n.apt_generated\n.classpath\n.factorypath\n.project\n.settings\n.springBeans\n.sts4-cache\nbin/\n!**/src/main/**/bin/\n!**/src/test/**/bin/\n\n### NetBeans ###\n/nbproject/private/\n/nbbuild/\n/dist/\n/nbdist/\n/.nb-gradle/\n\n### VS Code ###\n.vscode/\n\n### Mac OS ###\n.DS_Store\n# 프로젝트 제외 경로\n/.gradle/
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.gitignore b/.gitignore
+--- a/.gitignore	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
++++ b/.gitignore	(date 1713319662702)
+@@ -28,4 +28,147 @@
+ ### Mac OS ###
+ .DS_Store
+ # 프로젝트 제외 경로
+-/.gradle/
+\ No newline at end of file
++/.gradle/
++/.idea/sonarlint/issuestore/0/d/0d16f03dc0b15d4646efba5e51f694c283029e20
++/.idea/sonarlint/securityhotspotstore/0/d/0d16f03dc0b15d4646efba5e51f694c283029e20
++/.idea/sonarlint/issuestore/1/a/1a273f73b7a477b0745593641bd708a6182c7ad5
++/.idea/sonarlint/securityhotspotstore/1/a/1a273f73b7a477b0745593641bd708a6182c7ad5
++/.idea/sonarlint/issuestore/2/a/2a45a911a8f1836b0b6c5b758962572012d8f8c3
++/.idea/sonarlint/securityhotspotstore/2/a/2a45a911a8f1836b0b6c5b758962572012d8f8c3
++/.idea/sonarlint/issuestore/4/b/4b4b6b66529bc3a9a37aab50e6d661a9782be256
++/.idea/sonarlint/securityhotspotstore/4/b/4b4b6b66529bc3a9a37aab50e6d661a9782be256
++/.idea/sonarlint/issuestore/4/b/4baf1ce38226df7b01754e4b8a71e3c205c0bd7b
++/.idea/sonarlint/securityhotspotstore/4/b/4baf1ce38226df7b01754e4b8a71e3c205c0bd7b
++/.idea/sonarlint/issuestore/4/b/4bfa5919ef29d5ed2581aa1a6a3a64baa87abb89
++/.idea/sonarlint/securityhotspotstore/4/b/4bfa5919ef29d5ed2581aa1a6a3a64baa87abb89
++/.idea/sonarlint/issuestore/4/e/4e4dc9ee428b2605ae39dad2a4439c0b6c2a93d3
++/.idea/sonarlint/securityhotspotstore/4/e/4e4dc9ee428b2605ae39dad2a4439c0b6c2a93d3
++/.idea/sonarlint/issuestore/5/b/5bbfa66edb4db3c7c33c5181f43510990d3307f9
++/.idea/sonarlint/securityhotspotstore/5/b/5bbfa66edb4db3c7c33c5181f43510990d3307f9
++/.idea/sonarlint/issuestore/0/5/05efc8b1657769a27696d478ded1e95f38737233
++/.idea/sonarlint/securityhotspotstore/0/5/05efc8b1657769a27696d478ded1e95f38737233
++/.idea/sonarlint/issuestore/6/f/6f7505a483624fd190218f37ed52b93fb4df2136
++/.idea/sonarlint/securityhotspotstore/6/f/6f7505a483624fd190218f37ed52b93fb4df2136
++/.idea/sonarlint/issuestore/9/c/9ca1036eaf2122c493f9fa04ea610d0173d0d76a
++/.idea/sonarlint/securityhotspotstore/9/c/9ca1036eaf2122c493f9fa04ea610d0173d0d76a
++/.idea/sonarlint/issuestore/0/9/09de52530696a3c3ffc55528ead70f5a37258955
++/.idea/sonarlint/securityhotspotstore/0/9/09de52530696a3c3ffc55528ead70f5a37258955
++/.idea/sonarlint/issuestore/1/8/18d1eb850eef616a8b07d7601b86fbfb9e157caa
++/.idea/sonarlint/securityhotspotstore/1/8/18d1eb850eef616a8b07d7601b86fbfb9e157caa
++/.idea/sonarlint/issuestore/6/9/69dab7641aba081f8415c636eb5a5eb3a5bf7c9a
++/.idea/sonarlint/securityhotspotstore/6/9/69dab7641aba081f8415c636eb5a5eb3a5bf7c9a
++/.idea/sonarlint/issuestore/4/2/420fc7e3ab5a1a191f5cb6c6e51db6f436d57d08
++/.idea/sonarlint/securityhotspotstore/4/2/420fc7e3ab5a1a191f5cb6c6e51db6f436d57d08
++/.idea/sonarlint/issuestore/7/3/733a7f78fb15f866556fb34f314e41cbd53ce05f
++/.idea/sonarlint/securityhotspotstore/7/3/733a7f78fb15f866556fb34f314e41cbd53ce05f
++/.idea/sonarlint/issuestore/3/9/3967f29d78377b763163e88658a43b154fb3d247
++/.idea/sonarlint/securityhotspotstore/3/9/3967f29d78377b763163e88658a43b154fb3d247
++/.idea/sonarlint/issuestore/0/4/04756c7b7e8e43f17169deb01888be2d3b270d8b
++/.idea/sonarlint/securityhotspotstore/0/4/04756c7b7e8e43f17169deb01888be2d3b270d8b
++/.idea/sonarlint/issuestore/4/8/4821e449ac548ef36b5fc3ffdc4eba73e6d42e0a
++/.idea/sonarlint/securityhotspotstore/4/8/4821e449ac548ef36b5fc3ffdc4eba73e6d42e0a
++/.idea/sonarlint/issuestore/4/8/4890cd8a5d9aef815f862427dfcb01d52d451fac
++/.idea/sonarlint/securityhotspotstore/4/8/4890cd8a5d9aef815f862427dfcb01d52d451fac
++/.idea/sonarlint/issuestore/6/1/61749c0b3364dc867ad751ebc519407e4196e7a3
++/.idea/sonarlint/securityhotspotstore/6/1/61749c0b3364dc867ad751ebc519407e4196e7a3
++/.idea/sonarlint/issuestore/4/4/442428b3cdad8762cbb3d0ac69c7df0ea1e37c23
++/.idea/sonarlint/securityhotspotstore/4/4/442428b3cdad8762cbb3d0ac69c7df0ea1e37c23
++/.idea/sonarlint/issuestore/a/5/a5cc2925ca8258af241be7e5b0381edf30266302
++/.idea/sonarlint/securityhotspotstore/a/5/a5cc2925ca8258af241be7e5b0381edf30266302
++/.idea/sonarlint/issuestore/a/9/a951e9c1b74a198fec6827507856d3995acb2822
++/.idea/sonarlint/securityhotspotstore/a/9/a951e9c1b74a198fec6827507856d3995acb2822
++/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/AdminController.class
++/.idea/sonarlint/issuestore/a/f/af71118b1c5790e1c5fa49b764dc744a2b04bbbf
++/.idea/sonarlint/securityhotspotstore/a/f/af71118b1c5790e1c5fa49b764dc744a2b04bbbf
++/build/resources/main/application.yml
++/build/resources/test/application.yml
++/build/reports/tests/test/css/base-style.css
++/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/BaseTimeEntity.class
++/.idea/sonarlint/issuestore/c/3/c376ee403e0d874cf383d4c38717ee6f20faa392
++/.idea/sonarlint/securityhotspotstore/c/3/c376ee403e0d874cf383d4c38717ee6f20faa392
++/build/reports/tests/test/packages/com.tasty.reviews.tastyreviews.controller.html
++/build/reports/tests/test/classes/com.tasty.reviews.tastyreviews.controller.MemberControllerTest.html
++/build/classes/java/main/com/tasty/reviews/tastyreviews/config/CorsMvcConfig.class
++/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/CreateMemberDTO$CreateMemberDTOBuilder.class
++/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/CreateMemberDTO.class
++/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/CustomUserDetails.class
++/build/classes/java/main/com/tasty/reviews/tastyreviews/service/CustomUserDetailsService.class
++/.idea/sonarlint/issuestore/d/3/d3b4887ab3557c3a265017a75791661787dc6e7d
++/.idea/sonarlint/securityhotspotstore/d/3/d3b4887ab3557c3a265017a75791661787dc6e7d
++/.idea/sonarlint/issuestore/d/9/d912f772af6813af6987854a77cafd5fdb694201
++/.idea/sonarlint/securityhotspotstore/d/9/d912f772af6813af6987854a77cafd5fdb694201
++/.idea/sonarlint/issuestore/d/a/daa7bbb759af16c1ab8665758bf13c6ad1188154
++/.idea/sonarlint/securityhotspotstore/d/a/daa7bbb759af16c1ab8665758bf13c6ad1188154
++/.idea/sonarlint/issuestore/e/2/e2e2d3ed4ce4b4edd74d4d490f75269aa4b28dcd
++/.idea/sonarlint/securityhotspotstore/e/2/e2e2d3ed4ce4b4edd74d4d490f75269aa4b28dcd
++/.idea/sonarlint/issuestore/e/a/ea262b8a246cbbeefd6c20e3e9bd608f394bd67b
++/.idea/sonarlint/securityhotspotstore/e/a/ea262b8a246cbbeefd6c20e3e9bd608f394bd67b
++/build/classes/java/main/com/tasty/reviews/tastyreviews/exception/ExceptionManager.class
++/.idea/sonarlint/issuestore/f/6/f6967ad820d9688aeef36050621da1c8b54baf1f
++/.idea/sonarlint/securityhotspotstore/f/6/f6967ad820d9688aeef36050621da1c8b54baf1f
++/.idea/sonarlint/issuestore/f/0/f07866736216be0ee2aba49e392191aeae700a35
++/.idea/sonarlint/securityhotspotstore/f/0/f07866736216be0ee2aba49e392191aeae700a35
++/.idea/sonarlint/issuestore/f/b/fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
++/.idea/sonarlint/securityhotspotstore/f/b/fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
++/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Gender.class
++/HELP.md
++/build/reports/tests/test/index.html
++/.idea/sonarlint/issuestore/index.pb
++/.idea/sonarlint/securityhotspotstore/index.pb
++/.idea/jpa.xml
++/.idea/jpa-buddy.xml
++/.idea/jsLibraryMappings.xml
++/build/classes/java/main/com/tasty/reviews/tastyreviews/jwt/JWTFilter.class
++/build/classes/java/main/com/tasty/reviews/tastyreviews/jwt/JWTUtil.class
++/build/classes/java/main/com/tasty/reviews/tastyreviews/jwt/LoginFilter.class
++/build/tmp/compileTestJava/compileTransaction/stash-dir/LoginMemberServiceTest.class.uniqueId1
++/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/MainController.class
++/build/resources/main/map.html
++/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Member$MemberBuilder.class
++/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Member.class
++/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/MemberController.class
++/build/tmp/compileTestJava/compileTransaction/stash-dir/MemberControllerTest.class.uniqueId0
++/build/classes/java/main/com/tasty/reviews/tastyreviews/repository/MemberRepository.class
++/build/classes/java/main/com/tasty/reviews/tastyreviews/service/MemberService.class
++/build/test-results/test/binary/output.bin
++/build/test-results/test/binary/output.bin.idx
++/build/tmp/compileJava/previous-compilation-data.bin
++/build/tmp/compileTestJava/previous-compilation-data.bin
++/.idea/inspectionProfiles/Project_Default.xml
++/build/reports/tests/test/js/report.js
++/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Restaurant$RestaurantBuilder.class
++/build/tmp/compileJava/compileTransaction/stash-dir/Restaurant$RestaurantBuilder.class.uniqueId11
++/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Restaurant.class
++/build/tmp/compileJava/compileTransaction/stash-dir/Restaurant.class.uniqueId12
++/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/RestaurantController.class
++/build/tmp/compileJava/compileTransaction/stash-dir/RestaurantController.class.uniqueId9
++/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/RestaurantDTO$RestaurantDTOBuilder.class
++/build/tmp/compileJava/compileTransaction/stash-dir/RestaurantDTO$RestaurantDTOBuilder.class.uniqueId0
++/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/RestaurantDTO.class
++/build/tmp/compileJava/compileTransaction/stash-dir/RestaurantDTO.class.uniqueId13
++/build/classes/java/main/com/tasty/reviews/tastyreviews/repository/RestaurantRepository.class
++/build/tmp/compileJava/compileTransaction/stash-dir/RestaurantRepository.class.uniqueId4
++/build/classes/java/main/com/tasty/reviews/tastyreviews/service/RestaurantService.class
++/build/tmp/compileJava/compileTransaction/stash-dir/RestaurantService.class.uniqueId7
++/build/test-results/test/binary/results.bin
++/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Review$ReviewBuilder.class
++/build/tmp/compileJava/compileTransaction/stash-dir/Review$ReviewBuilder.class.uniqueId3
++/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Review.class
++/build/tmp/compileJava/compileTransaction/stash-dir/Review.class.uniqueId1
++/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/ReviewController.class
++/build/tmp/compileJava/compileTransaction/stash-dir/ReviewController.class.uniqueId6
++/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/ReviewDTO$ReviewDTOBuilder.class
++/build/tmp/compileJava/compileTransaction/stash-dir/ReviewDTO$ReviewDTOBuilder.class.uniqueId10
++/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/ReviewDTO.class
++/build/tmp/compileJava/compileTransaction/stash-dir/ReviewDTO.class.uniqueId8
++/build/classes/java/main/com/tasty/reviews/tastyreviews/repository/ReviewRepository.class
++/build/tmp/compileJava/compileTransaction/stash-dir/ReviewRepository.class.uniqueId5
++/build/classes/java/main/com/tasty/reviews/tastyreviews/service/ReviewService.class
++/build/tmp/compileJava/compileTransaction/stash-dir/ReviewService.class.uniqueId2
++/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Role.class
++/build/classes/java/main/com/tasty/reviews/tastyreviews/config/SecurityConfig.class
++/build/reports/tests/test/css/style.css
++/build/classes/java/main/com/tasty/reviews/tastyreviews/TastyReviewsApplication.class
++/build/classes/java/test/com/tasty/reviews/tastyreviews/TastyReviewsApplicationTests.class
++/build/test-results/test/TEST-com.tasty.reviews.tastyreviews.controller.MemberControllerTest.xml
++/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/TestController.class
+Index: src/main/resources/application.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>spring:\n  datasource:\n    url: jdbc:h2:tcp://localhost/~/reviews_db\n    username: sa\n    password:\n    driver-class-name: org.h2.Driver\n  jwt:\n    secret: dljfjaldkfjaksldfjaldkfjlkadsfjakslfjafejfopajdiofjaiodfdlksfjakldfjakldsf\n\n  h2:\n    console:\n      enabled: true\n  jpa:\n    hibernate:\n      ddl-auto: none\n    properties:\n      hibernate:\n        show_sql: true\n        format_sql: true\n\nlogging:\n  level:\n    root: INFO # 전체 로그 레벨 설정\n    org:\n      springframework:\n        security: DEBUG # Spring Security 로그 레벨 설정\n\n      hibernate:\n        SQL: DEBUG # Hibernate SQL 로그 레벨 설정\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/application.yml b/src/main/resources/application.yml
+--- a/src/main/resources/application.yml	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
++++ b/src/main/resources/application.yml	(date 1713247993273)
+@@ -12,7 +12,7 @@
+       enabled: true
+   jpa:
+     hibernate:
+-      ddl-auto: none
++      ddl-auto: create
+     properties:
+       hibernate:
+         show_sql: true
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"CompilerConfiguration\">\n    <annotationProcessing>\n      <profile default=\"true\" name=\"Default\" enabled=\"true\" />\n      <profile name=\"Gradle Imported\" enabled=\"true\">\n        <outputRelativeToContentRoot value=\"true\" />\n        <processorPath useClasspath=\"false\">\n          <entry name=\"$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f195ee86e6c896ea47a1d39defbe20eb59cd149d/lombok-1.18.30.jar\" />\n        </processorPath>\n        <module name=\"com.tasty.reviews.tasty-reviews.main\" />\n      </profile>\n    </annotationProcessing>\n    <bytecodeTargetLevel target=\"17\" />\n  </component>\n  <component name=\"JavacSettings\">\n    <option name=\"ADDITIONAL_OPTIONS_STRING\" value=\"-parameters\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+--- a/.idea/compiler.xml	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
++++ b/.idea/compiler.xml	(date 1713283242088)
+@@ -8,7 +8,7 @@
+         <processorPath useClasspath="false">
+           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f195ee86e6c896ea47a1d39defbe20eb59cd149d/lombok-1.18.30.jar" />
+         </processorPath>
+-        <module name="com.tasty.reviews.tasty-reviews.main" />
++        <module name="tasty-reviews.main" />
+       </profile>
+     </annotationProcessing>
+     <bytecodeTargetLevel target="17" />
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\n  <component name=\"FrameworkDetectionExcludesConfiguration\">\n    <file type=\"web\" url=\"file://$PROJECT_DIR$\" />\n  </component>\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_17\" default=\"true\" project-jdk-name=\"17\" project-jdk-type=\"JavaSDK\" />\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
++++ b/.idea/misc.xml	(date 1713314248389)
+@@ -5,4 +5,7 @@
+     <file type="web" url="file://$PROJECT_DIR$" />
+   </component>
+   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK" />
++  <component name="ProjectType">
++    <option name="id" value="jpab" />
++  </component>
+ </project>
+\ No newline at end of file
+Index: src/main/java/com/tasty/reviews/tastyreviews/controller/RestaurantController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tasty.reviews.tastyreviews.controller;\n\nimport com.tasty.reviews.tastyreviews.dto.RestaurantDTO;\nimport com.tasty.reviews.tastyreviews.service.RestaurantService;\nimport lombok.RequiredArgsConstructor;\nimport org.springframework.http.HttpStatus;\nimport org.springframework.http.ResponseEntity;\nimport org.springframework.security.core.Authentication;\nimport org.springframework.security.core.context.SecurityContextHolder;\nimport org.springframework.web.bind.annotation.PostMapping;\nimport org.springframework.web.bind.annotation.RequestBody;\nimport org.springframework.web.bind.annotation.RequestMapping;\nimport org.springframework.web.bind.annotation.RestController;\n\n@RestController\n@RequestMapping(\"/restaurant\")\n@RequiredArgsConstructor\npublic class RestaurantController {\n\n    private final RestaurantService restaurantService;\n\n    @PostMapping(\"/add\")\n    public ResponseEntity<RestaurantDTO> registerRestaurant(@RequestBody RestaurantDTO restaurantDTO) {\n        // 현재 로그인한 사용자 정보 가져오기\n        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();\n\n        // 인증된 사용자의 이름을 가져옵니다. 이를 사용하여 사용자 정보를 가져올 수 있습니다.\n        String username = authentication.getName();\n\n        // 레스토랑 등록 및 응답 반환\n        RestaurantDTO registeredRestaurant = restaurantService.addRestaurant(restaurantDTO, username);\n        return ResponseEntity.status(HttpStatus.CREATED).body(registeredRestaurant);\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/tasty/reviews/tastyreviews/controller/RestaurantController.java b/src/main/java/com/tasty/reviews/tastyreviews/controller/RestaurantController.java
+--- a/src/main/java/com/tasty/reviews/tastyreviews/controller/RestaurantController.java	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
++++ b/src/main/java/com/tasty/reviews/tastyreviews/controller/RestaurantController.java	(date 1713412811515)
+@@ -21,8 +21,10 @@
+ 
+     @PostMapping("/add")
+     public ResponseEntity<RestaurantDTO> registerRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
++
+         // 현재 로그인한 사용자 정보 가져오기
+         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
++        System.out.println("authentication = "+authentication);
+ 
+         // 인증된 사용자의 이름을 가져옵니다. 이를 사용하여 사용자 정보를 가져올 수 있습니다.
+         String username = authentication.getName();
+Index: src/main/java/com/tasty/reviews/tastyreviews/domain/Restaurant.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tasty.reviews.tastyreviews.domain;\n\nimport jakarta.persistence.*;\nimport lombok.*;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\n@Entity\n@Getter\n@NoArgsConstructor\n@AllArgsConstructor\n@Builder\n@Setter\npublic class Restaurant extends BaseTimeEntity {\n\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    @Column(name = \"Restaurant_Id\")\n    private Long id;\n\n    @Column(nullable = false)\n    private String name;\n\n    @Column(nullable = false)\n    private String category;\n\n    @Column(nullable = false)\n    private String description;\n\n    @Column(nullable = false)\n    private String imageurl;\n\n    @Column(nullable = false)\n    private Integer viewcount;\n\n    @Column(nullable = false)\n    private String address;\n\n    // 여러 개의 리뷰를 저장하기 위한 List\n    @OneToMany(mappedBy = \"restaurant\", cascade = CascadeType.ALL, fetch = FetchType.LAZY)\n    private List<Review> reviews = new ArrayList<>();\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/tasty/reviews/tastyreviews/domain/Restaurant.java b/src/main/java/com/tasty/reviews/tastyreviews/domain/Restaurant.java
+--- a/src/main/java/com/tasty/reviews/tastyreviews/domain/Restaurant.java	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
++++ b/src/main/java/com/tasty/reviews/tastyreviews/domain/Restaurant.java	(date 1713248984506)
+@@ -38,7 +38,6 @@
+     private String address;
+ 
+     // 여러 개의 리뷰를 저장하기 위한 List
+-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
++    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+     private List<Review> reviews = new ArrayList<>();
+-
+ }
+Index: src/main/java/com/tasty/reviews/tastyreviews/domain/Review.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tasty.reviews.tastyreviews.domain;\n\nimport jakarta.persistence.*;\nimport jakarta.validation.constraints.Max;\nimport jakarta.validation.constraints.Min;\nimport lombok.*;\n\n@Entity\n@Getter\n@Setter\n@NoArgsConstructor\n@AllArgsConstructor(access = AccessLevel.PROTECTED)\n@Builder\npublic class Review extends BaseTimeEntity {\n\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    @Column(name = \"Review_id\")\n    private Long id;\n\n    @ManyToOne\n    @JoinColumn(name = \"Member_id\", nullable = false)\n    private Member member;\n\n    @ManyToOne\n    @JoinColumn(name = \"Restaurant_id\", nullable = false)\n    private Restaurant restaurant;\n\n    @Column(name = \"Rating\", nullable = false)\n    @Min(1)\n    @Max(5)\n    private int rating;\n\n    @Column(nullable = false)\n    private String comment;\n\n    private String imageURL;\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/tasty/reviews/tastyreviews/domain/Review.java b/src/main/java/com/tasty/reviews/tastyreviews/domain/Review.java
+--- a/src/main/java/com/tasty/reviews/tastyreviews/domain/Review.java	(revision 4e9e391795f21a94d6e0a27e19d20924b70cdb7a)
++++ b/src/main/java/com/tasty/reviews/tastyreviews/domain/Review.java	(date 1713248689674)
+@@ -18,11 +18,11 @@
+     @Column(name = "Review_id")
+     private Long id;
+ 
+-    @ManyToOne
++    @ManyToOne(fetch = FetchType.LAZY)
+     @JoinColumn(name = "Member_id", nullable = false)
+     private Member member;
+ 
+-    @ManyToOne
++    @ManyToOne(fetch = FetchType.LAZY)
+     @JoinColumn(name = "Restaurant_id", nullable = false)
+     private Restaurant restaurant;
+ 
