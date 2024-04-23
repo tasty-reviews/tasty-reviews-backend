@@ -15,7 +15,7 @@ import org.springframework.web.filter.GenericFilterBean;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-public class CustomLogoutFilter extends GenericFilterBean {
+public class CustomLogoutFilter extends GenericFilterBean { //로그아웃 필터
 
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
