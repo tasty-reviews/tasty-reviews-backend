@@ -1,8 +1,11 @@
 package com.tasty.reviews.tastyreviews.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tasty.reviews.tastyreviews.domain.RefreshEntity;
+import com.tasty.reviews.tastyreviews.dto.LoginDTO;
 import com.tasty.reviews.tastyreviews.repository.RefreshRepository;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +17,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.StreamUtils;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -30,9 +36,24 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        // 클라이언트 요청에서 username, password를 추출
-        String username = obtainUsername(request);
-        String password = obtainPassword(request);
+        LoginDTO loginDTO = new LoginDTO();
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            ServletInputStream inputStream = request.getInputStream();
+            String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+            loginDTO = objectMapper.readValue(messageBody, LoginDTO.class);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        String username = loginDTO.getEmail();
+        String password = loginDTO.getPassword();
+
+//        // 클라이언트 요청에서 username, password를 추출
+//        String username = obtainUsername(request);
+//        String password = obtainPassword(request);
 
         // 스프링 시큐리티에서 username과 password를 검증하기 위한 UsernamePasswordAuthenticationToken 생성
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
@@ -55,6 +76,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //토큰 생성
         String access = jwtUtil.createJwt("access", username, role, 600000L);
         String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
+
 
         //서버에 리프레시 토큰 저장
         addRefreshEntity(username, refresh, 86400000L);
