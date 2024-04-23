@@ -1,5 +1,6 @@
 package com.tasty.reviews.tastyreviews.config;
 
+import com.tasty.reviews.tastyreviews.jwt.CustomLogoutFilter;
 import com.tasty.reviews.tastyreviews.jwt.JWTFilter;
 import com.tasty.reviews.tastyreviews.jwt.JWTUtil;
 import com.tasty.reviews.tastyreviews.jwt.LoginFilter;
@@ -16,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Collections;
@@ -28,7 +30,7 @@ public class SecurityConfig {
     //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-    private final RefreshRepository repository;
+    private final RefreshRepository refreshRepository;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -78,10 +80,10 @@ public class SecurityConfig {
 
                 );
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
-
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, repository), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
 
 
         http
