@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Member extends BaseTimeEntity{
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,9 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false, unique = true, length = 45)
     private String nickname;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Gender gender;
+    private String gender;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

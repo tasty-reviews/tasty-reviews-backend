@@ -1,19 +1,29 @@
-#실제 DB
-spring: #띄어쓰기 없음
-  datasource: #띄어쓰기 2칸
+spring:
+  datasource:
     url: jdbc:h2:tcp://localhost/~/reviews_db
     username: sa
     password:
     driver-class-name: org.h2.Driver
+  jwt:
+    secret: dljfjaldkfjaksldfjaldkfjlkadsfjakslfjafejfopajdiofjaiodfdlksfjakldfjakldsf
+
   h2:
     console:
       enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
 
-  jpa: #띄어쓰기 2칸
-    hibernate: #띄어쓰기 4칸
-      ddl-auto: create #띄어쓰기 6칸
-    properties: #띄어쓰기 4칸
-      hibernate: #띄어쓰기 6칸
-        show_sql: true #띄어쓰기 8칸
-        format_sql: true #띄어쓰기 8칸
+logging:
+  level:
+    root: INFO # 전체 로그 레벨 설정
+    org:
+      springframework:
+        security: DEBUG # Spring Security 로그 레벨 설정
 
+      hibernate:
+        SQL: DEBUG # Hibernate SQL 로그 레벨 설정
