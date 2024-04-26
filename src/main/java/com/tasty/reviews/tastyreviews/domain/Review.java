@@ -1,5 +1,6 @@
 package com.tasty.reviews.tastyreviews.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -18,11 +19,13 @@ public class Review extends BaseTimeEntity {
     @Column(name = "Review_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "Member_id", nullable = false)
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "Restaurant_id", nullable = false)
     private Restaurant restaurant;
 
