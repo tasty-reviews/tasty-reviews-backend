@@ -18,6 +18,16 @@ spring:
         show_sql: true
         format_sql: true
 
+naver:
+  url:
+    search:
+      local: "https://openapi.naver.com/v1/search/local.json"
+      image: "https://openapi.naver.com/v1/search/image"
+  client:
+    id: 942xEdx8DRSPviV0bqW4
+    secret: fQhY5rNaI5
+
+
 logging:
   level:
     root: INFO # 전체 로그 레벨 설정
