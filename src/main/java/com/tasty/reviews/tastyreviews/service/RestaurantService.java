@@ -4,8 +4,13 @@ import com.tasty.reviews.tastyreviews.domain.Restaurant;
 import com.tasty.reviews.tastyreviews.dto.RestaurantDTO;
 import com.tasty.reviews.tastyreviews.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,6 +32,29 @@ public class RestaurantService {
 
         // 등록된 레스토랑 정보를 다시 DTO로 변환하여 반환
         return RestaurantDTO.fromEntity(savedRestaurant);
+    }
+
+    public void saveRestaurantsFromApiResponse(String jsonResponse) throws JSONException {
+        JSONArray restaurantsArray = new JSONObject(jsonResponse).getJSONArray("items");
+        for (int i = 0; i < restaurantsArray.length(); i++) {
+            JSONObject restaurantJson = restaurantsArray.getJSONObject(i);
+
+            String name = Utils.removeHtmlTags(restaurantJson.getString("title"));
+            String address = restaurantJson.getString("address");
+
+            // 중복 검사
+            Optional<Restaurant> existingRestaurant = restaurantRepository.findByNameAndAddress(name, address);
+            if (!existingRestaurant.isPresent()) { // 중복이 없으면 새로 저장
+                Restaurant restaurant = new Restaurant();
+                restaurant.setName(name);
+                restaurant.setDescription(restaurantJson.getString("description"));
+                restaurant.setAddress(address);
+                restaurant.setCategory(restaurantJson.getString("category"));
+                restaurant.setImageurl(restaurantJson.optString("image")); // 'optString'은 필드가 없는 경우 빈 문자열을 반환
+                restaurant.setViewcount(0); // 초기 조회수는 0으로 설정
+                restaurantRepository.save(restaurant);
+            }
+        }
     }
 
 /*    private boolean isAdmin(String username) {
