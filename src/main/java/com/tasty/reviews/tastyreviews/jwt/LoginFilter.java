@@ -81,11 +81,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //서버에 리프레시 토큰 저장
         addRefreshEntity(username, refresh, 86400000L);
 
-        //응답 설정
-        response.setHeader("access", access); //헤더에 access 토큰 저장
-        response.addCookie(createCookie("refresh", refresh)); //쿠키에 refresh 토큰 저장
-        response.setStatus(HttpStatus.OK.value()); //상태코드 설정
-
+        response.setHeader("Authorization", access); // Authorization 헤더에 access 토큰 저장
+        response.addCookie(createCookie("refresh", refresh)); // 쿠키에 refresh 토큰 저장
+        response.setStatus(HttpStatus.OK.value()); // 상태코드 설정
     }
 
     // 로그인 실패 시 실행되는 메서드
