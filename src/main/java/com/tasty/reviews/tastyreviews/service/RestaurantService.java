@@ -39,6 +39,7 @@ public class RestaurantService {
         for (int i = 0; i < restaurantsArray.length(); i++) {
             JSONObject restaurantJson = restaurantsArray.getJSONObject(i);
 
+            //음식점 이름html삭제
             String name = Utils.removeHtmlTags(restaurantJson.getString("title"));
             String address = restaurantJson.getString("address");
 

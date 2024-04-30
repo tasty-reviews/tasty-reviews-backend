@@ -30,6 +30,7 @@ public class ReviewService {
 
     // 특정 회원의 리뷰 조회
     public List<Review> getReviewsByMemberId(Long memberId) {
+        isLogined();
         return reviewRepository.findByMemberId(memberId);
     }
 
