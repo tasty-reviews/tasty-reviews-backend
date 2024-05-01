@@ -24,9 +24,9 @@ public class ReviewController {
     }
 
     // 특정 회원의 리뷰 조회
-    @GetMapping("/members/{memberId}")
-    public ResponseEntity<List<Review>> getReviewsByMemberId(@PathVariable Long memberId) {
-        List<Review> reviews = reviewService.getReviewsByMemberId(memberId);
+    @GetMapping("/members/reviews")
+    public ResponseEntity<List<Review>> getReviewsByMemberId() {
+        List<Review> reviews = reviewService.getReviewsByMemberId();
         return ResponseEntity.ok(reviews);
     }
 
