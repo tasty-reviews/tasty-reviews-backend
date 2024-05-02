@@ -37,9 +37,9 @@ public class Restaurant extends BaseTimeEntity {
     @Column(nullable = false)
     private String address;
 
-    private Integer mapX;
+    private Double Latitude;
 
-    private Integer mapY;
+    private Double Longitude;
 
     // 여러 개의 리뷰를 저장하기 위한 List
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)

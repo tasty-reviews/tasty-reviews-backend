@@ -53,6 +53,13 @@ public class RestaurantService {
                 restaurant.setCategory(restaurantJson.getString("category"));
                 restaurant.setImageurl(restaurantJson.optString("image")); // 'optString'은 필드가 없는 경우 빈 문자열을 반환
                 restaurant.setViewcount(0); // 초기 조회수는 0으로 설정
+
+                // 좌표 정보 추가
+                double latitude = Double.parseDouble(restaurantJson.getString("mapy")); // 위도
+                double longitude = Double.parseDouble(restaurantJson.getString("mapx")); // 경도
+                restaurant.setLatitude(latitude);
+                restaurant.setLongitude(longitude);
+
                 restaurantRepository.save(restaurant);
             }
         }
