@@ -1,200 +1,288 @@
-### IntelliJ IDEA ###
+# Created by https://www.toptal.com/developers/gitignore/api/windows,intellij,intellij+all,macos,java,gradle
+# Edit at https://www.toptal.com/developers/gitignore?templates=windows,intellij,intellij+all,macos,java,gradle
+
+### Intellij ###
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+# User-specific stuff
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# AWS User-specific
+.idea/**/aws.xml
+
+# Generated files
+.idea/**/contentModel.xml
+
+# Sensitive or high-churn files
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
+
+# Gradle
+.idea/**/gradle.xml
+.idea/**/libraries
+
+# Gradle and Maven with auto-import
+# When using Gradle or Maven with auto-import, you should exclude module files,
+# since they will be recreated, and may cause churn.  Uncomment if using
+# auto-import.
+# .idea/artifacts
+# .idea/compiler.xml
+# .idea/jarRepositories.xml
+# .idea/modules.xml
+# .idea/*.iml
+# .idea/modules
+# *.iml
+# *.ipr
+
+# CMake
+cmake-build-*/
+
+# Mongo Explorer plugin
+.idea/**/mongoSettings.xml
+
+# File-based project format
+*.iws
+
+# IntelliJ
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+# mpeltonen/sbt-idea plugin
+.idea_modules/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# JIRA plugin
+atlassian-ide-plugin.xml
 
-### VS Code ###
-.vscode/
+# Cursive Clojure plugin
+.idea/replstate.xml
 
-### Mac OS ###
+# SonarLint plugin
+.idea/sonarlint/
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Editor-based Rest Client
+.idea/httpRequests
+
+# Android studio 3.1+ serialized cache file
+.idea/caches/build_file_checksums.ser
+
+### Intellij Patch ###
+# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
+
+# *.iml
+# modules.xml
+# .idea/misc.xml
+# *.ipr
+
+# Sonarlint plugin
+# https://plugins.jetbrains.com/plugin/7973-sonarlint
+.idea/**/sonarlint/
+
+# SonarQube Plugin
+# https://plugins.jetbrains.com/plugin/7238-sonarqube-community-plugin
+.idea/**/sonarIssues.xml
+
+# Markdown Navigator plugin
+# https://plugins.jetbrains.com/plugin/7896-markdown-navigator-enhanced
+.idea/**/markdown-navigator.xml
+.idea/**/markdown-navigator-enh.xml
+.idea/**/markdown-navigator/
+
+# Cache file creation bug
+# See https://youtrack.jetbrains.com/issue/JBR-2257
+.idea/$CACHE_FILE$
+
+# CodeStream plugin
+# https://plugins.jetbrains.com/plugin/12206-codestream
+.idea/codestream.xml
+
+# Azure Toolkit for IntelliJ plugin
+# https://plugins.jetbrains.com/plugin/8053-azure-toolkit-for-intellij
+.idea/**/azureSettings.xml
+
+### Intellij+all ###
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+# User-specific stuff
+
+# AWS User-specific
+
+# Generated files
+
+# Sensitive or high-churn files
+
+# Gradle
+
+# Gradle and Maven with auto-import
+# When using Gradle or Maven with auto-import, you should exclude module files,
+# since they will be recreated, and may cause churn.  Uncomment if using
+# auto-import.
+# .idea/artifacts
+# .idea/compiler.xml
+# .idea/jarRepositories.xml
+# .idea/modules.xml
+# .idea/*.iml
+# .idea/modules
+# *.iml
+# *.ipr
+
+# CMake
+
+# Mongo Explorer plugin
+
+# File-based project format
+
+# IntelliJ
+
+# mpeltonen/sbt-idea plugin
+
+# JIRA plugin
+
+# Cursive Clojure plugin
+
+# SonarLint plugin
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+
+# Editor-based Rest Client
+
+# Android studio 3.1+ serialized cache file
+
+### Intellij+all Patch ###
+# Ignore everything but code style settings and run configurations
+# that are supposed to be shared within teams.
+
+.idea/*
+
+!.idea/codeStyles
+!.idea/runConfigurations
+
+### Java ###
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
+
+### macOS ###
+# General
 .DS_Store
-# 프로젝트 제외 경로
-/.gradle/
-/.idea/sonarlint/issuestore/0/d/0d16f03dc0b15d4646efba5e51f694c283029e20
-/.idea/sonarlint/securityhotspotstore/0/d/0d16f03dc0b15d4646efba5e51f694c283029e20
-/.idea/sonarlint/issuestore/1/a/1a273f73b7a477b0745593641bd708a6182c7ad5
-/.idea/sonarlint/securityhotspotstore/1/a/1a273f73b7a477b0745593641bd708a6182c7ad5
-/.idea/sonarlint/issuestore/2/a/2a45a911a8f1836b0b6c5b758962572012d8f8c3
-/.idea/sonarlint/securityhotspotstore/2/a/2a45a911a8f1836b0b6c5b758962572012d8f8c3
-/.idea/sonarlint/issuestore/4/b/4b4b6b66529bc3a9a37aab50e6d661a9782be256
-/.idea/sonarlint/securityhotspotstore/4/b/4b4b6b66529bc3a9a37aab50e6d661a9782be256
-/.idea/sonarlint/issuestore/4/b/4baf1ce38226df7b01754e4b8a71e3c205c0bd7b
-/.idea/sonarlint/securityhotspotstore/4/b/4baf1ce38226df7b01754e4b8a71e3c205c0bd7b
-/.idea/sonarlint/issuestore/4/b/4bfa5919ef29d5ed2581aa1a6a3a64baa87abb89
-/.idea/sonarlint/securityhotspotstore/4/b/4bfa5919ef29d5ed2581aa1a6a3a64baa87abb89
-/.idea/sonarlint/issuestore/4/e/4e4dc9ee428b2605ae39dad2a4439c0b6c2a93d3
-/.idea/sonarlint/securityhotspotstore/4/e/4e4dc9ee428b2605ae39dad2a4439c0b6c2a93d3
-/.idea/sonarlint/issuestore/5/b/5bbfa66edb4db3c7c33c5181f43510990d3307f9
-/.idea/sonarlint/securityhotspotstore/5/b/5bbfa66edb4db3c7c33c5181f43510990d3307f9
-/.idea/sonarlint/issuestore/0/5/05efc8b1657769a27696d478ded1e95f38737233
-/.idea/sonarlint/securityhotspotstore/0/5/05efc8b1657769a27696d478ded1e95f38737233
-/.idea/sonarlint/issuestore/6/f/6f7505a483624fd190218f37ed52b93fb4df2136
-/.idea/sonarlint/securityhotspotstore/6/f/6f7505a483624fd190218f37ed52b93fb4df2136
-/.idea/sonarlint/issuestore/9/c/9ca1036eaf2122c493f9fa04ea610d0173d0d76a
-/.idea/sonarlint/securityhotspotstore/9/c/9ca1036eaf2122c493f9fa04ea610d0173d0d76a
-/.idea/sonarlint/issuestore/0/9/09de52530696a3c3ffc55528ead70f5a37258955
-/.idea/sonarlint/securityhotspotstore/0/9/09de52530696a3c3ffc55528ead70f5a37258955
-/.idea/sonarlint/issuestore/1/8/18d1eb850eef616a8b07d7601b86fbfb9e157caa
-/.idea/sonarlint/securityhotspotstore/1/8/18d1eb850eef616a8b07d7601b86fbfb9e157caa
-/.idea/sonarlint/issuestore/6/9/69dab7641aba081f8415c636eb5a5eb3a5bf7c9a
-/.idea/sonarlint/securityhotspotstore/6/9/69dab7641aba081f8415c636eb5a5eb3a5bf7c9a
-/.idea/sonarlint/issuestore/4/2/420fc7e3ab5a1a191f5cb6c6e51db6f436d57d08
-/.idea/sonarlint/securityhotspotstore/4/2/420fc7e3ab5a1a191f5cb6c6e51db6f436d57d08
-/.idea/sonarlint/issuestore/7/3/733a7f78fb15f866556fb34f314e41cbd53ce05f
-/.idea/sonarlint/securityhotspotstore/7/3/733a7f78fb15f866556fb34f314e41cbd53ce05f
-/.idea/sonarlint/issuestore/3/9/3967f29d78377b763163e88658a43b154fb3d247
-/.idea/sonarlint/securityhotspotstore/3/9/3967f29d78377b763163e88658a43b154fb3d247
-/.idea/sonarlint/issuestore/0/4/04756c7b7e8e43f17169deb01888be2d3b270d8b
-/.idea/sonarlint/securityhotspotstore/0/4/04756c7b7e8e43f17169deb01888be2d3b270d8b
-/.idea/sonarlint/issuestore/4/8/4821e449ac548ef36b5fc3ffdc4eba73e6d42e0a
-/.idea/sonarlint/securityhotspotstore/4/8/4821e449ac548ef36b5fc3ffdc4eba73e6d42e0a
-/.idea/sonarlint/issuestore/4/8/4890cd8a5d9aef815f862427dfcb01d52d451fac
-/.idea/sonarlint/securityhotspotstore/4/8/4890cd8a5d9aef815f862427dfcb01d52d451fac
-/.idea/sonarlint/issuestore/6/1/61749c0b3364dc867ad751ebc519407e4196e7a3
-/.idea/sonarlint/securityhotspotstore/6/1/61749c0b3364dc867ad751ebc519407e4196e7a3
-/.idea/sonarlint/issuestore/4/4/442428b3cdad8762cbb3d0ac69c7df0ea1e37c23
-/.idea/sonarlint/securityhotspotstore/4/4/442428b3cdad8762cbb3d0ac69c7df0ea1e37c23
-/.idea/sonarlint/issuestore/a/5/a5cc2925ca8258af241be7e5b0381edf30266302
-/.idea/sonarlint/securityhotspotstore/a/5/a5cc2925ca8258af241be7e5b0381edf30266302
-/.idea/sonarlint/issuestore/a/9/a951e9c1b74a198fec6827507856d3995acb2822
-/.idea/sonarlint/securityhotspotstore/a/9/a951e9c1b74a198fec6827507856d3995acb2822
-/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/AdminController.class
-/.idea/sonarlint/issuestore/a/f/af71118b1c5790e1c5fa49b764dc744a2b04bbbf
-/.idea/sonarlint/securityhotspotstore/a/f/af71118b1c5790e1c5fa49b764dc744a2b04bbbf
-/build/resources/main/application.yml
-/build/resources/test/application.yml
-/build/reports/tests/test/css/base-style.css
-/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/BaseTimeEntity.class
-/.idea/sonarlint/issuestore/c/3/c376ee403e0d874cf383d4c38717ee6f20faa392
-/.idea/sonarlint/securityhotspotstore/c/3/c376ee403e0d874cf383d4c38717ee6f20faa392
-/build/reports/tests/test/packages/com.tasty.reviews.tastyreviews.controller.html
-/build/reports/tests/test/classes/com.tasty.reviews.tastyreviews.controller.MemberControllerTest.html
-/build/classes/java/main/com/tasty/reviews/tastyreviews/config/CorsMvcConfig.class
-/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/CreateMemberDTO$CreateMemberDTOBuilder.class
-/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/CreateMemberDTO.class
-/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/CustomUserDetails.class
-/build/classes/java/main/com/tasty/reviews/tastyreviews/service/CustomUserDetailsService.class
-/.idea/sonarlint/issuestore/d/3/d3b4887ab3557c3a265017a75791661787dc6e7d
-/.idea/sonarlint/securityhotspotstore/d/3/d3b4887ab3557c3a265017a75791661787dc6e7d
-/.idea/sonarlint/issuestore/d/9/d912f772af6813af6987854a77cafd5fdb694201
-/.idea/sonarlint/securityhotspotstore/d/9/d912f772af6813af6987854a77cafd5fdb694201
-/.idea/sonarlint/issuestore/d/a/daa7bbb759af16c1ab8665758bf13c6ad1188154
-/.idea/sonarlint/securityhotspotstore/d/a/daa7bbb759af16c1ab8665758bf13c6ad1188154
-/.idea/sonarlint/issuestore/e/2/e2e2d3ed4ce4b4edd74d4d490f75269aa4b28dcd
-/.idea/sonarlint/securityhotspotstore/e/2/e2e2d3ed4ce4b4edd74d4d490f75269aa4b28dcd
-/.idea/sonarlint/issuestore/e/a/ea262b8a246cbbeefd6c20e3e9bd608f394bd67b
-/.idea/sonarlint/securityhotspotstore/e/a/ea262b8a246cbbeefd6c20e3e9bd608f394bd67b
-/build/classes/java/main/com/tasty/reviews/tastyreviews/exception/ExceptionManager.class
-/.idea/sonarlint/issuestore/f/6/f6967ad820d9688aeef36050621da1c8b54baf1f
-/.idea/sonarlint/securityhotspotstore/f/6/f6967ad820d9688aeef36050621da1c8b54baf1f
-/.idea/sonarlint/issuestore/f/0/f07866736216be0ee2aba49e392191aeae700a35
-/.idea/sonarlint/securityhotspotstore/f/0/f07866736216be0ee2aba49e392191aeae700a35
-/.idea/sonarlint/issuestore/f/b/fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
-/.idea/sonarlint/securityhotspotstore/f/b/fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
-/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Gender.class
-/HELP.md
-/build/reports/tests/test/index.html
-/.idea/sonarlint/issuestore/index.pb
-/.idea/sonarlint/securityhotspotstore/index.pb
-/.idea/jpa.xml
-/.idea/jpa-buddy.xml
-/.idea/jsLibraryMappings.xml
-/build/classes/java/main/com/tasty/reviews/tastyreviews/jwt/JWTFilter.class
-/build/classes/java/main/com/tasty/reviews/tastyreviews/jwt/JWTUtil.class
-/build/classes/java/main/com/tasty/reviews/tastyreviews/jwt/LoginFilter.class
-/build/tmp/compileTestJava/compileTransaction/stash-dir/LoginMemberServiceTest.class.uniqueId1
-/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/MainController.class
-/build/resources/main/map.html
-/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Member$MemberBuilder.class
-/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Member.class
-/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/MemberController.class
-/build/tmp/compileTestJava/compileTransaction/stash-dir/MemberControllerTest.class.uniqueId0
-/build/classes/java/main/com/tasty/reviews/tastyreviews/repository/MemberRepository.class
-/build/classes/java/main/com/tasty/reviews/tastyreviews/service/MemberService.class
-/build/test-results/test/binary/output.bin
-/build/test-results/test/binary/output.bin.idx
-/build/tmp/compileJava/previous-compilation-data.bin
-/build/tmp/compileTestJava/previous-compilation-data.bin
-/.idea/inspectionProfiles/Project_Default.xml
-/build/reports/tests/test/js/report.js
-/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Restaurant$RestaurantBuilder.class
-/build/tmp/compileJava/compileTransaction/stash-dir/Restaurant$RestaurantBuilder.class.uniqueId11
-/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Restaurant.class
-/build/tmp/compileJava/compileTransaction/stash-dir/Restaurant.class.uniqueId12
-/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/RestaurantController.class
-/build/tmp/compileJava/compileTransaction/stash-dir/RestaurantController.class.uniqueId9
-/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/RestaurantDTO$RestaurantDTOBuilder.class
-/build/tmp/compileJava/compileTransaction/stash-dir/RestaurantDTO$RestaurantDTOBuilder.class.uniqueId0
-/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/RestaurantDTO.class
-/build/tmp/compileJava/compileTransaction/stash-dir/RestaurantDTO.class.uniqueId13
-/build/classes/java/main/com/tasty/reviews/tastyreviews/repository/RestaurantRepository.class
-/build/tmp/compileJava/compileTransaction/stash-dir/RestaurantRepository.class.uniqueId4
-/build/classes/java/main/com/tasty/reviews/tastyreviews/service/RestaurantService.class
-/build/tmp/compileJava/compileTransaction/stash-dir/RestaurantService.class.uniqueId7
-/build/test-results/test/binary/results.bin
-/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Review$ReviewBuilder.class
-/build/tmp/compileJava/compileTransaction/stash-dir/Review$ReviewBuilder.class.uniqueId3
-/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Review.class
-/build/tmp/compileJava/compileTransaction/stash-dir/Review.class.uniqueId1
-/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/ReviewController.class
-/build/tmp/compileJava/compileTransaction/stash-dir/ReviewController.class.uniqueId6
-/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/ReviewDTO$ReviewDTOBuilder.class
-/build/tmp/compileJava/compileTransaction/stash-dir/ReviewDTO$ReviewDTOBuilder.class.uniqueId10
-/build/classes/java/main/com/tasty/reviews/tastyreviews/dto/ReviewDTO.class
-/build/tmp/compileJava/compileTransaction/stash-dir/ReviewDTO.class.uniqueId8
-/build/classes/java/main/com/tasty/reviews/tastyreviews/repository/ReviewRepository.class
-/build/tmp/compileJava/compileTransaction/stash-dir/ReviewRepository.class.uniqueId5
-/build/classes/java/main/com/tasty/reviews/tastyreviews/service/ReviewService.class
-/build/tmp/compileJava/compileTransaction/stash-dir/ReviewService.class.uniqueId2
-/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/Role.class
-/build/classes/java/main/com/tasty/reviews/tastyreviews/config/SecurityConfig.class
-/build/reports/tests/test/css/style.css
-/build/classes/java/main/com/tasty/reviews/tastyreviews/TastyReviewsApplication.class
-/build/classes/java/test/com/tasty/reviews/tastyreviews/TastyReviewsApplicationTests.class
-/build/test-results/test/TEST-com.tasty.reviews.tastyreviews.controller.MemberControllerTest.xml
-/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/TestController.class
-/.idea/sonarlint/issuestore/8/e/8ec90c2a9016016bd9bd267d51d484353708a798
-/.idea/sonarlint/securityhotspotstore/8/e/8ec90c2a9016016bd9bd267d51d484353708a798
-/.idea/sonarlint/issuestore/1/5/15b5b2a6eae3721b1bd73bd9974cd8116adaaac4
-/.idea/sonarlint/securityhotspotstore/1/5/15b5b2a6eae3721b1bd73bd9974cd8116adaaac4
-/.idea/sonarlint/issuestore/0/9/099ee7a89a2f5864d486f64a7871acf52f4fbf59
-/.idea/sonarlint/securityhotspotstore/0/9/099ee7a89a2f5864d486f64a7871acf52f4fbf59
-/.idea/sonarlint/issuestore/1/0/102105e07a8bdcfc32e3fa1827da431fca40c842
-/.idea/sonarlint/securityhotspotstore/1/0/102105e07a8bdcfc32e3fa1827da431fca40c842
-/build/tmp/compileJava/compileTransaction/stash-dir/LoginFilter.class.uniqueId1
-/build/classes/java/main/com/tasty/reviews/tastyreviews/domain/RefreshEntity.class
-/build/classes/java/main/com/tasty/reviews/tastyreviews/repository/RefreshRepository.class
-/build/classes/java/main/com/tasty/reviews/tastyreviews/controller/ReissueController.class
-/build/tmp/compileJava/compileTransaction/stash-dir/ReissueController.class.uniqueId0
-/build/tmp/compileJava/compileTransaction/stash-dir/SecurityConfig.class.uniqueId2
-!/.idea/misc.xml
-!/.idea/modules.xml
-!/.idea/compiler.xml
-/.idea/shelf/24__4__22___6_53__________.xml
-/.idea/shelf/24__4__22___7_13__________.xml
-/.idea/shelf/feat____refresh____.xml
-/.idea/shelf/24__4__22__오후_6_53,_업데이트_전에_커밋되지_않은_변경_내용_[변경]/shelved.patch
-/.idea/shelf/24__4__22__오후_7_13,_업데이트_전에_커밋되지_않은_변경_내용_[변경]/shelved.patch
-/.idea/shelf/feat__로그인_성공시_refresh_토큰_발급_메서드_추가/shelved.patch
-/.idea/workspace.xml
-/.idea/shelf/24__4__22__오후_6_53,_업데이트_전에_커밋되지_않은_변경_내용_[변경]/shelved.patch
-/.idea/shelf/24__4__22__오후_7_13,_업데이트_전에_커밋되지_않은_변경_내용_[변경]/shelved.patch
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+### macOS Patch ###
+# iCloud generated files
+*.icloud
+
+### Windows ###
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+### Gradle ###
+.gradle
+**/build/
+!src/**/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Avoid ignore Gradle wrappper properties
+!gradle-wrapper.properties
+
+# Cache of project
+.gradletasknamecache
+
+# Eclipse Gradle plugin generated files
+# Eclipse Core
+.project
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+### Gradle Patch ###
+# Java heap dump
+*.hprof
+
+# End of https://www.toptal.com/developers/gitignore/api/windows,intellij,intellij+all,macos,java,gradle!/.idea/modules/
+!/.idea/sonarlint/
