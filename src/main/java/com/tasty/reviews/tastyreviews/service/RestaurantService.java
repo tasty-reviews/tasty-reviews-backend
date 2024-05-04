@@ -19,7 +19,7 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
-    public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO, String username) {
+    public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO) {
 /*        // 사용자 역할 확인
         if (!isAdmin(username)) {
             throw new IllegalStateException("Only administrators can add restaurants.");
@@ -35,28 +35,26 @@ public class RestaurantService {
     }
 
     public void saveRestaurantsFromApiResponse(String jsonResponse) throws JSONException {
-        JSONArray restaurantsArray = new JSONObject(jsonResponse).getJSONArray("items");
+        JSONArray restaurantsArray = new JSONObject(jsonResponse).getJSONArray("documents");
         for (int i = 0; i < restaurantsArray.length(); i++) {
             JSONObject restaurantJson = restaurantsArray.getJSONObject(i);
 
-            //음식점 이름html삭제
-            String name = Utils.removeHtmlTags(restaurantJson.getString("title"));
-            String address = restaurantJson.getString("address");
+            String name = restaurantJson.optString("place_name", "Unknown Name"); // "place_name"을 사용하고 기본값 설정
+            String address = restaurantJson.optString("address_name", "No Address Provided");
 
             // 중복 검사
             Optional<Restaurant> existingRestaurant = restaurantRepository.findByNameAndAddress(name, address);
             if (!existingRestaurant.isPresent()) { // 중복이 없으면 새로 저장
                 Restaurant restaurant = new Restaurant();
                 restaurant.setName(name);
-                restaurant.setDescription(restaurantJson.getString("description"));
+                restaurant.setDescription(restaurantJson.optString("category_name", ""));
                 restaurant.setAddress(address);
-                restaurant.setCategory(restaurantJson.getString("category"));
-                restaurant.setImageurl(restaurantJson.optString("image")); // 'optString'은 필드가 없는 경우 빈 문자열을 반환
-                restaurant.setViewcount(0); // 초기 조회수는 0으로 설정
+                restaurant.setCategory(restaurantJson.getString("category_name"));
+                restaurant.setImageurl("");  // 카카오 API는 이미지 URL을 제공하지 않을 수 있음
+                restaurant.setViewcount(0);  // 초기 조회수는 0으로 설정
 
-                // 좌표 정보 추가
-                double latitude = Double.parseDouble(restaurantJson.getString("mapy")); // 위도
-                double longitude = Double.parseDouble(restaurantJson.getString("mapx")); // 경도
+                double latitude = Double.parseDouble(restaurantJson.optString("y", "0")); // 위도, 기본값 0
+                double longitude = Double.parseDouble(restaurantJson.optString("x", "0")); // 경도, 기본값 0
                 restaurant.setLatitude(latitude);
                 restaurant.setLongitude(longitude);
 
@@ -64,6 +62,7 @@ public class RestaurantService {
             }
         }
     }
+
 
 /*    private boolean isAdmin(String username) {
         // 여기에 사용자 이름(username)을 기반으로 사용자 역할을 확인하는 로직을 추가하세요.
