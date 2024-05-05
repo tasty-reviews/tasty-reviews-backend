@@ -18,7 +18,7 @@ public class ReviewController {
 
     // 특정 레스토랑의 리뷰 조회
     @GetMapping("/restaurants/{restaurantId}")
-    public ResponseEntity<List<Review>> getReviewsByRestaurantId(@PathVariable Long restaurantId) {
+    public ResponseEntity<List<Review>> getReviewsByRestaurantId(@PathVariable(name = "restaurantId") Long restaurantId) {
         List<Review> reviews = reviewService.getReviewsByRestaurantId(restaurantId);
         return ResponseEntity.ok(reviews);
     }
