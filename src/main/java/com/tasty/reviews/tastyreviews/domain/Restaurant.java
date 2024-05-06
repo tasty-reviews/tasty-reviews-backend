@@ -1,5 +1,6 @@
 package com.tasty.reviews.tastyreviews.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,9 +38,14 @@ public class Restaurant extends BaseTimeEntity {
     @Column(nullable = false)
     private String address;
 
-    private Double Latitude;
+    private Double latitude;
 
-    private Double Longitude;
+    private Double longitude;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "UserMap_id", nullable = false)
+    private UserMap userMap;
 
     // 여러 개의 리뷰를 저장하기 위한 List
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)

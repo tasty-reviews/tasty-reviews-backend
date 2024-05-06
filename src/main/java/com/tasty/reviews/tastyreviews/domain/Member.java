@@ -38,4 +38,8 @@ public class Member extends BaseTimeEntity {
     //하나의 회원에 여러개의 리뷰를 저장
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
+
+    //하나의 회원에 여러개의 사용자지도를 저장
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<UserMap> usermaps = new ArrayList<>();
 }
