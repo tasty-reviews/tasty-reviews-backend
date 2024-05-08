@@ -43,20 +43,17 @@ public class RestaurantService {
             String address = restaurantJson.optString("address_name", "No Address Provided");
 
             // 중복 검사
-            Optional<Restaurant> existingRestaurant = restaurantRepository.findByNameAndAddress(name, address);
-            if (!existingRestaurant.isPresent()) { // 중복이 없으면 새로 저장
+            Optional<Restaurant> existingRestaurant = restaurantRepository.findByPlaceNameAndRoadAddressName(name, address);
+            if (existingRestaurant.isEmpty()) { // 중복이 없으면 새로 저장
                 Restaurant restaurant = new Restaurant();
-                restaurant.setName(name);
-                restaurant.setDescription(restaurantJson.optString("category_name", ""));
-                restaurant.setAddress(address);
-                restaurant.setCategory(restaurantJson.getString("category_name"));
-                restaurant.setImageurl("");  // 카카오 API는 이미지 URL을 제공하지 않을 수 있음
-                restaurant.setViewcount(0);  // 초기 조회수는 0으로 설정
-
-                double latitude = Double.parseDouble(restaurantJson.optString("y", "0")); // 위도, 기본값 0
-                double longitude = Double.parseDouble(restaurantJson.optString("x", "0")); // 경도, 기본값 0
-                restaurant.setLatitude(latitude);
-                restaurant.setLongitude(longitude);
+                restaurant.setPlaceName(name);
+                restaurant.setRoadAddressName(address);
+                restaurant.setCategoryName(restaurantJson.getString("category_name"));
+                restaurant.setPlaceUrl(restaurantJson.getString("place_url"));
+                restaurant.setPhone(restaurantJson.getString("phone"));
+                restaurant.setViewCount(0);  // 초기 조회수는 0으로 설정
+                restaurant.setX(restaurantJson.optString("x", "0"));    // 위도, 기본값 0
+                restaurant.setY(restaurantJson.optString("y", "0"));    // 경도, 기본값 0
 
                 restaurantRepository.save(restaurant);
             }
