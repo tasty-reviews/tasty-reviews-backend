@@ -70,7 +70,8 @@ public class KakaoSearchController {
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 // 서비스를 사용하여 응답 데이터 저장
                 restaurantService.saveRestaurantsFromApiResponse(responseEntity.getBody());
-                return ResponseEntity.ok("검색 결과가 성공적으로 저장되었습니다.");
+//                return ResponseEntity.ok("검색 결과가 성공적으로 저장되었습니다.");
+                return ResponseEntity.ok(responseEntity.getBody());
             } else {
                 return ResponseEntity.status(responseEntity.getStatusCode()).body("API 호출 실패");
             }
