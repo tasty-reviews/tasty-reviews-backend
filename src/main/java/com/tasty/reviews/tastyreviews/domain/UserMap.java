@@ -28,8 +28,12 @@ public class UserMap {
 
     private String imageurl;
 
-    // 여러 개의 음식점을 저장하기 위한 List
-    @OneToMany(mappedBy = "userMap", cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+            name = "usermap_restaurant", // 연결 테이블 이름
+            joinColumns = @JoinColumn(name = "usermap_id"), // UserMap 쪽 참조 키
+            inverseJoinColumns = @JoinColumn(name = "restaurant_id") // Restaurant 쪽 참조 키
+    )
     private List<Restaurant> restaurants = new ArrayList<>();
 
     @JsonIgnore

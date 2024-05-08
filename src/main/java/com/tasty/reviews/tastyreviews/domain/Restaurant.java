@@ -46,13 +46,12 @@ public class Restaurant extends BaseTimeEntity {
 
 //    @Column(nullable = false)
     private String placeUrl;
-//
+
     // 여러 개의 리뷰를 저장하기 위한 List
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
-//    @JsonIgnore
-//    @ManyToOne
-//    @JoinColumn(name = "UserMap_id", nullable = false)
-//    private UserMap userMap;
+    @ManyToMany(mappedBy = "restaurants")
+    private List<UserMap> userMaps = new ArrayList<>();
+
 }
