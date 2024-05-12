@@ -1,9 +1,11 @@
 package com.tasty.reviews.tastyreviews.service;
 
 import com.tasty.reviews.tastyreviews.domain.Member;
+import com.tasty.reviews.tastyreviews.domain.Restaurant;
 import com.tasty.reviews.tastyreviews.domain.Review;
 import com.tasty.reviews.tastyreviews.domain.UserMap;
 import com.tasty.reviews.tastyreviews.repository.MemberRepository;
+import com.tasty.reviews.tastyreviews.repository.RestaurantRepository;
 import com.tasty.reviews.tastyreviews.repository.UserMapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,6 +20,7 @@ public class UserMapService {
 
     private final UserMapRepository userMapRepository;
     private final MemberRepository memberRepository;
+    private final RestaurantRepository restaurantRepository;
 
     //사용자지도 추가
     public UserMap createUserMap(UserMap userMap) {
@@ -75,6 +78,22 @@ public class UserMapService {
         userMapRepository.delete(userMap);
     }
 
+    //사용자지도에 음식점 추가
+    public UserMap addRestaurantToUserMap(Long userMapId, Long restaurantId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("User must be logged in to delete a user map");
+        }
+
+        UserMap userMap = userMapRepository.findById(userMapId)
+                .orElseThrow(() -> new RuntimeException("UserMap not found"));
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+
+        userMap.getRestaurants().add(restaurant); // UserMap과 Restaurant 관계 설정
+        return userMapRepository.save(userMap); // 변경 사항 저장
+    }
 }
 
 

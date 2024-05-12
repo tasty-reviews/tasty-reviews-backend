@@ -34,4 +34,10 @@ public class UserMapController {
         return ResponseEntity.noContent().build();
     }
 
+    //음식점 추가
+    @PostMapping("/userMaps/{userMapId}/addRestaurant/{restaurantId}")
+    public ResponseEntity<UserMap> addRestaurantToUserMap(@PathVariable Long userMapId, @PathVariable Long restaurantId) {
+        UserMap updatedUserMap = userMapService.addRestaurantToUserMap(userMapId, restaurantId);
+        return ResponseEntity.ok(updatedUserMap);
+    }
 }
