@@ -51,6 +51,7 @@ public class Restaurant extends BaseTimeEntity {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "restaurants")
     private List<UserMap> userMaps = new ArrayList<>();
 
