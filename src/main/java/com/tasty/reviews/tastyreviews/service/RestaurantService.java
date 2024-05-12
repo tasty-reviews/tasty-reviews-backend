@@ -60,6 +60,14 @@ public class RestaurantService {
         }
     }
 
+    public RestaurantDTO findByPlace(Long id) {
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 음식점은 존재하지 않습니다." + id));
+
+        return new RestaurantDTO().fromEntity(restaurant);
+    }
+
+
 
 /*    private boolean isAdmin(String username) {
         // 여기에 사용자 이름(username)을 기반으로 사용자 역할을 확인하는 로직을 추가하세요.
