@@ -29,8 +29,16 @@ public class ReviewService {
     }
 
     // 특정 회원의 리뷰 조회
-    public List<Review> getReviewsByMemberId(Long memberId) {
-        return reviewRepository.findByMemberId(memberId);
+    public List<Review> getReviewsByMemberId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("User must be logged in to access reviews");
+        }
+
+        String email = authentication.getName(); // 이메일을 사용자 식별자로 가정
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+        return reviewRepository.findByMemberId(member.getId());
     }
 
     // 리뷰 생성

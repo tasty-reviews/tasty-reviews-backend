@@ -1,5 +1,7 @@
 package com.tasty.reviews.tastyreviews.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tasty.reviews.tastyreviews.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,24 +22,37 @@ public class Restaurant extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String placeName;
 
     @Column(nullable = false)
-    private String category;
+    private String categoryName;
+
+//    @Column(nullable = false)
+    private String phone;
+
+    private String imageUrl;
 
     @Column(nullable = false)
-    private String description;
+    private Integer viewCount;
 
     @Column(nullable = false)
-    private String imageurl;
+    private String roadAddressName;
 
     @Column(nullable = false)
-    private Integer viewcount;
+    private String x;
 
     @Column(nullable = false)
-    private String address;
+    private String y;
+
+//    @Column(nullable = false)
+    private String placeUrl;
 
     // 여러 개의 리뷰를 저장하기 위한 List
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "restaurants")
+    private List<UserMap> userMaps = new ArrayList<>();
+
 }

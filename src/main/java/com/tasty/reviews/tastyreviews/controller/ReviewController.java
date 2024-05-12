@@ -18,15 +18,15 @@ public class ReviewController {
 
     // 특정 레스토랑의 리뷰 조회
     @GetMapping("/restaurants/{restaurantId}")
-    public ResponseEntity<List<Review>> getReviewsByRestaurantId(@PathVariable Long restaurantId) {
+    public ResponseEntity<List<Review>> getReviewsByRestaurantId(@PathVariable(name = "restaurantId") Long restaurantId) {
         List<Review> reviews = reviewService.getReviewsByRestaurantId(restaurantId);
         return ResponseEntity.ok(reviews);
     }
 
     // 특정 회원의 리뷰 조회
-    @GetMapping("/members/{memberId}")
-    public ResponseEntity<List<Review>> getReviewsByMemberId(@PathVariable Long memberId) {
-        List<Review> reviews = reviewService.getReviewsByMemberId(memberId);
+    @GetMapping("/members/reviews")
+    public ResponseEntity<List<Review>> getReviewsByMemberId() {
+        List<Review> reviews = reviewService.getReviewsByMemberId();
         return ResponseEntity.ok(reviews);
     }
 
