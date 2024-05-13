@@ -2,7 +2,6 @@ package com.tasty.reviews.tastyreviews.service;
 
 import com.tasty.reviews.tastyreviews.domain.Member;
 import com.tasty.reviews.tastyreviews.domain.Restaurant;
-import com.tasty.reviews.tastyreviews.domain.Review;
 import com.tasty.reviews.tastyreviews.domain.UserMap;
 import com.tasty.reviews.tastyreviews.repository.MemberRepository;
 import com.tasty.reviews.tastyreviews.repository.RestaurantRepository;
@@ -12,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -93,6 +94,19 @@ public class UserMapService {
 
         userMap.getRestaurants().add(restaurant); // UserMap과 Restaurant 관계 설정
         return userMapRepository.save(userMap); // 변경 사항 저장
+    }
+
+    //사용자가 작성한 사용자지도 리스트 조회
+    @Transactional(readOnly = true)
+    public List<UserMap> getUserMapByEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("User must be logged in to delete a user map");
+        }
+
+        String email = authentication.getName();
+        return userMapRepository.findByMemberEmail(email);
     }
 }
 

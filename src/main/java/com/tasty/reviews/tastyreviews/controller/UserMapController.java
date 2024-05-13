@@ -7,11 +7,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class UserMapController {
 
     private final UserMapService userMapService;
+
+    //내지도 조회
+    @GetMapping("/usermaps")
+    public ResponseEntity<List<UserMap>> getUserMaps() {
+        try {
+            List<UserMap> userMaps = userMapService.getUserMapByEmail();
+            return ResponseEntity.ok(userMaps);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(401).build(); // 401 Unauthorized
+        }
+    }
 
     //내지도 추가
     @PostMapping("/usermap/add")
