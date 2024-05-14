@@ -56,4 +56,19 @@ public class RestaurantService {
         }
     }
 
+    public RestaurantDTO findByPlace(Long id) {
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 음식점은 존재하지 않습니다." + id));
+
+        return new RestaurantDTO().fromEntity(restaurant);
+    }
+
+
+
+/*    private boolean isAdmin(String username) {
+        // 여기에 사용자 이름(username)을 기반으로 사용자 역할을 확인하는 로직을 추가하세요.
+        // 예를 들어, 사용자 이름으로 데이터베이스에서 해당 사용자를 조회하여 역할을 확인할 수 있습니다.
+        // 이 예제에서는 단순히 "admin"이라는 이름을 가진 사용자만이 관리자로 간주합니다.
+        return "admin".equals(username);
+    }*/
 }

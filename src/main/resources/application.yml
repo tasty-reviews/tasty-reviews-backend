@@ -18,6 +18,11 @@ spring:
         show_sql: true
         format_sql: true
 
+naver:
+  client:
+    id: z5_1N93ZPYttDAeegf1v
+    secret: Y7N1zcMl1N
+
 logging:
   level:
     root: INFO # 전체 로그 레벨 설정
