@@ -70,10 +70,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // csrf disable
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/main", "/join", "/search", "/search/image")
+                        .requestMatchers("/", "/main", "/join")
                         .permitAll()
-                        .requestMatchers("/admin")
-                        .hasRole("ADMIN")
+
+                        .requestMatchers("/search", "/api/restaurants/{restaurantId}")
+                        .permitAll()
+
+                        .requestMatchers("/place/**")
+                        .permitAll()
+
                         .requestMatchers("/reissue")
                         .permitAll()
                         .anyRequest().authenticated()
