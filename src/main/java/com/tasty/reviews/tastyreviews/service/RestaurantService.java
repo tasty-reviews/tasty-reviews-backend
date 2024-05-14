@@ -20,6 +20,7 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
 
     public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO) {
+
         // DTO를 엔티티로 변환
         Restaurant restaurant = restaurantDTO.toEntity();
 
@@ -62,13 +63,4 @@ public class RestaurantService {
 
         return new RestaurantDTO().fromEntity(restaurant);
     }
-
-
-
-/*    private boolean isAdmin(String username) {
-        // 여기에 사용자 이름(username)을 기반으로 사용자 역할을 확인하는 로직을 추가하세요.
-        // 예를 들어, 사용자 이름으로 데이터베이스에서 해당 사용자를 조회하여 역할을 확인할 수 있습니다.
-        // 이 예제에서는 단순히 "admin"이라는 이름을 가진 사용자만이 관리자로 간주합니다.
-        return "admin".equals(username);
-    }*/
 }
