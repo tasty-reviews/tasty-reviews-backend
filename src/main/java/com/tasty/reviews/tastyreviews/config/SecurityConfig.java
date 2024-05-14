@@ -73,7 +73,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/main", "/join")
                         .permitAll()
 
-                        .requestMatchers("/search", "/api/restaurants/{restaurantId}")
+                        .requestMatchers("/search", "/search/image", "/api/restaurants/{restaurantId}")
                         .permitAll()
 
                         .requestMatchers("/place/**")
