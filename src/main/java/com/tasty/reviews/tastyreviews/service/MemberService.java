@@ -41,12 +41,4 @@ public class MemberService {
         memberRepository.save(createMemberDTO.toEntity()); // 저장
     }
 
-    @Transactional
-    public String login(String emali, String password) {
-        //email 없음
-
-        //password 틀림
-
-        return "토큰";
-    }
 }
