@@ -53,7 +53,7 @@ public class SecurityConfig {
 
                     CorsConfiguration configuration = new CorsConfiguration();
 
-                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8081"));
+                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8090"));
                     configuration.setAllowedMethods(Collections.singletonList("*"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -70,7 +70,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // csrf disable
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/main", "/join", "/search", "/api/restaurants/{restaurantId}")
+                        .requestMatchers("/", "/main", "/join", "/search", "/search/image")
                         .permitAll()
                         .requestMatchers("/admin")
                         .hasRole("ADMIN")
