@@ -36,7 +36,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        LoginDTO loginDTO = new LoginDTO();
+        LoginDTO loginDTO;
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -51,9 +51,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String username = loginDTO.getEmail();
         String password = loginDTO.getPassword();
 
-//        // 클라이언트 요청에서 username, password를 추출
-//        String username = obtainUsername(request);
-//        String password = obtainPassword(request);
 
         // 스프링 시큐리티에서 username과 password를 검증하기 위한 UsernamePasswordAuthenticationToken 생성
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
