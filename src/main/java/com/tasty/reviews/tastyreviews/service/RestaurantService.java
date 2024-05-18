@@ -61,6 +61,8 @@ public class RestaurantService {
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 음식점은 존재하지 않습니다." + id));
 
+        restaurant.setViewCount(restaurant.getViewCount() + 1);
+
         return new RestaurantDTO().fromEntity(restaurant);
     }
 }

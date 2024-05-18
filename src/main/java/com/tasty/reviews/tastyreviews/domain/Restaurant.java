@@ -1,7 +1,6 @@
 package com.tasty.reviews.tastyreviews.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tasty.reviews.tastyreviews.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
