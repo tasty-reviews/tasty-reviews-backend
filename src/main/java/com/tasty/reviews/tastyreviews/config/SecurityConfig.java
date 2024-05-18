@@ -79,6 +79,9 @@ public class SecurityConfig {
                         .requestMatchers("/place/**")
                         .permitAll()
 
+                        .requestMatchers("/rankings/**")
+                        .permitAll()
+
                         .requestMatchers("/reissue")
                         .permitAll()
                         .anyRequest().authenticated()
