@@ -15,22 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final MailService mailService;
     private final BCryptPasswordEncoder encoder;
 
     @Transactional
     public void join(CreateMemberDTO createMemberDTO) {
 
         memberRepository.findByEmail(createMemberDTO.getEmail())
-                .ifPresent( m -> {
+                .ifPresent(m -> {
                     throw new IllegalStateException("이미 가입된 이메일 입니다");
                 });
 
         memberRepository.findByNickname(createMemberDTO.getNickname())
-                .ifPresent( m -> {
+                .ifPresent(m -> {
                     throw new IllegalStateException("이미 존재하는 닉네임 입니다.");
                 });
 
-        //중복된 이메일이 존재하지 않을경우 회원가입 진행
+        // 중복된 이메일이 존재하지 않을 경우 회원가입 진행
         log.info("암호화 전 : {}", createMemberDTO.getPassword());
 
         String encodedPassword = encoder.encode(createMemberDTO.getPassword());
@@ -38,7 +39,9 @@ public class MemberService {
 
         log.info("암호화 후 : {}", encodedPassword);
 
-        memberRepository.save(createMemberDTO.toEntity()); // 저장
-    }
+        // 이메일 인증 코드 발송
+        String authCode = mailService.sendAuthCode(createMemberDTO.getEmail());
 
+        memberRepository.save(createMemberDTO.toEntity());// 저장
+    }
 }
