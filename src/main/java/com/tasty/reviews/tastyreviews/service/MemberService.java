@@ -39,9 +39,11 @@ public class MemberService {
 
         log.info("암호화 후 : {}", encodedPassword);
 
-        // 이메일 인증 코드 발송
-        String authCode = mailService.sendAuthCode(createMemberDTO.getEmail());
-
         memberRepository.save(createMemberDTO.toEntity());// 저장
+    }
+
+    @Transactional
+    public void sendMail(String mail) {
+        String authCode = mailService.sendAuthCode(mail);
     }
 }
