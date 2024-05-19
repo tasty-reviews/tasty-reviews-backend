@@ -108,6 +108,20 @@ public class UserMapService {
         String email = authentication.getName();
         return userMapRepository.findByMemberEmail(email);
     }
+
+    //리스트에 저장된 음식점 조회
+    public List<Restaurant> getRestaurantsByUserMapId(Long usermapId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("User must be logged in to delete a user map");
+        }
+
+        UserMap userMap = userMapRepository.findById(usermapId)
+                .orElseThrow(() -> new IllegalArgumentException("UserMap not found with id: " + usermapId));
+
+        return userMap.getRestaurants();
+    }
 }
 
 
