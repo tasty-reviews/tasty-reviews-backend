@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @Slf4j
 @RestController
@@ -32,8 +34,8 @@ public class MemberController {
 
     // 인증 코드 확인
     @PostMapping("/verify")
-    public ResponseEntity<String> verifyCode(@RequestBody String authCode) {
-        // 클라이언트가 입력한 인증 코드와 실제 전송된 코드를 비교하여 인증 여부 확인
+    public ResponseEntity<String> verifyCode(@RequestBody Map<String, String> requestBody) {
+        String authCode = requestBody.get("inputCode");
         boolean isVerified = mailService.verifyCode(authCode);
 
         if (isVerified) {
@@ -42,5 +44,6 @@ public class MemberController {
             return ResponseEntity.badRequest().body("인증 코드가 일치하지 않습니다.");
         }
     }
+
 }
 

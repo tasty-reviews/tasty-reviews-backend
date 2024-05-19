@@ -36,13 +36,13 @@ public class MailService {
         return authCode;
     }
 
-    // 인증 코드 확인 메서드
+    // 인증 코드 검증
     public boolean verifyCode(String inputCode) {
         String authCode = (String) session.getAttribute("authCode");
         return authCode != null && authCode.equals(inputCode);
     }
 
-    // 랜덤 인증 코드 생성 메서드
+    // 랜덤 인증 코드 생성
     private String generateAuthCode() {
         int length = 6; // 인증 코드 길이 설정
         String numbers = "0123456789"; // 숫자 범위
