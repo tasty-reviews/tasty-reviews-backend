@@ -70,7 +70,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // csrf disable
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/main", "/join", "/verify")
+                        .requestMatchers("/", "/main", "/join", "/verify", "/auth-code")
                         .permitAll()
 
                         .requestMatchers("/search", "/search/image")
