@@ -42,4 +42,9 @@ public class Member extends BaseTimeEntity {
     //하나의 회원에 여러개의 사용자지도를 저장
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<UserMap> usermaps = new ArrayList<>();
+
+    //비즈니스 로직
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
