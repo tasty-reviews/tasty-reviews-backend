@@ -1,6 +1,8 @@
 package com.tasty.reviews.tastyreviews.service;
 
+import com.tasty.reviews.tastyreviews.domain.Member;
 import com.tasty.reviews.tastyreviews.dto.CreateMemberDTO;
+import com.tasty.reviews.tastyreviews.dto.NicknameRequestDTO;
 import com.tasty.reviews.tastyreviews.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +45,13 @@ public class MemberService {
     }
 
     @Transactional
-    public void sendMail(String mail) {
-        String authCode = mailService.sendAuthCode(mail);
+    public void updateNickname(NicknameRequestDTO requestDTO, Long id) {
+
+        //해당하는 멤버 찾기
+        Member findMember = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다"));
+
+        //해당하는 멤버의 닉네임 수정
+        findMember.updateNickname(requestDTO.getNickName());
     }
 }

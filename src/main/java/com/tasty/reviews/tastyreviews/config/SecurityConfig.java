@@ -81,6 +81,8 @@ public class SecurityConfig {
 
                         .requestMatchers("/reissue")
                         .permitAll()
+
+                        .requestMatchers("/mypage/**").hasRole("USER")
                         .anyRequest().authenticated()
 
                 );
