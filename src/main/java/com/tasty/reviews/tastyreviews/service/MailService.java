@@ -20,8 +20,7 @@ public class MailService {
     private String fromEmail;
 
     // 인증 코드 전송 메서드
-    public String sendAuthCode(String email) {
-
+    public void sendAuthCode(String email) {
         String authCode = generateAuthCode(); // 랜덤 인증 코드 생성
         session.setAttribute("authCode", authCode); // 세션에 인증 코드 저장
 
@@ -32,8 +31,6 @@ public class MailService {
         message.setSubject("회원가입을 위한 인증 코드");
         message.setText("회원가입을 위한 인증 코드는 다음과 같습니다: " + authCode);
         emailSender.send(message);
-
-        return authCode;
     }
 
     // 인증 코드 검증
