@@ -82,7 +82,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String nickname = findNickname(username); //DB에서 닉네임 가져오기
 
         Map<String, Object> responseData = new HashMap<>();
-        responseData.put("username", username);
+        responseData.put("email", username);
         responseData.put("role", role);
         responseData.put("nickname", nickname);
 
