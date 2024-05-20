@@ -4,6 +4,7 @@ import com.tasty.reviews.tastyreviews.jwt.CustomLogoutFilter;
 import com.tasty.reviews.tastyreviews.jwt.JWTFilter;
 import com.tasty.reviews.tastyreviews.jwt.JWTUtil;
 import com.tasty.reviews.tastyreviews.jwt.LoginFilter;
+import com.tasty.reviews.tastyreviews.repository.MemberRepository;
 import com.tasty.reviews.tastyreviews.repository.RefreshRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +32,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final MemberRepository memberRepository;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -93,7 +95,7 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository, memberRepository), UsernamePasswordAuthenticationFilter.class);
 
 
         http
