@@ -1,8 +1,10 @@
 package com.tasty.reviews.tastyreviews.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tasty.reviews.tastyreviews.domain.Member;
 import com.tasty.reviews.tastyreviews.domain.RefreshEntity;
 import com.tasty.reviews.tastyreviews.dto.LoginDTO;
+import com.tasty.reviews.tastyreviews.repository.MemberRepository;
 import com.tasty.reviews.tastyreviews.repository.RefreshRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletInputStream;
@@ -21,9 +23,7 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -31,6 +31,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final MemberRepository memberRepository;
 
     // 사용자가 로그인을 시도할 때 호출되는 메서드
     @Override
@@ -61,7 +62,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     // 로그인 성공 시 실행되는 메서드
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         //유저 정보
         String username = authentication.getName();
 
@@ -74,13 +75,23 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String access = jwtUtil.createJwt("access", username, role, 600000L);
         String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
 
-
         //서버에 리프레시 토큰 저장
         addRefreshEntity(username, refresh, 86400000L);
 
+        ObjectMapper mapper = new ObjectMapper();
+        String nickname = findNickname(username); //DB에서 닉네임 가져오기
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("username", username);
+        responseData.put("role", role);
+        responseData.put("nickname", nickname);
+
         response.setHeader("Authorization", access); // Authorization 헤더에 access 토큰 저장
         response.addCookie(createCookie("refresh", refresh)); // 쿠키에 refresh 토큰 저장
+        response.setContentType("application/json;charset=UTF-8"); //JSON응답/한글 인코딩
         response.setStatus(HttpStatus.OK.value()); // 상태코드 설정
+        mapper.writeValue(response.getWriter(), responseData); //응답 본문
+
     }
 
     // 로그인 실패 시 실행되는 메서드
@@ -112,5 +123,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         refreshEntity.setExpiration(date.toString());
 
         refreshRepository.save(refreshEntity);
+    }
+
+    private String findNickname(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("일치하는 이메일이 없습니다"));
+
+        return member.getNickname();
     }
 }
