@@ -17,12 +17,13 @@ public class KakaoSearchController {
     private final RestaurantService restaurantService;
     private final KakaoSearchService kakaoSearchService;
 
-
+    //검색
     @GetMapping("/search")
     public ResponseEntity<String> placeSearch(@RequestParam("q") String keyword) {
         return kakaoSearchService.searchPlace(keyword);
     }
 
+    //음식점 상세보기
     @GetMapping("/place/{id}")
     public ResponseEntity<RestaurantDTO> findByPlace(@PathVariable Long id) {
         RestaurantDTO restaurantDto = restaurantService.findByPlace(id);
