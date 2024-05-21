@@ -1,11 +1,11 @@
 package com.tasty.reviews.tastyreviews.member.service;
 
+import com.tasty.reviews.tastyreviews.global.jwt.repository.RefreshRepository;
+import com.tasty.reviews.tastyreviews.mail.service.MailService;
 import com.tasty.reviews.tastyreviews.member.domain.Member;
 import com.tasty.reviews.tastyreviews.member.dto.CreateMemberDTO;
 import com.tasty.reviews.tastyreviews.member.dto.NicknameRequestDTO;
 import com.tasty.reviews.tastyreviews.member.repository.MemberRepository;
-import com.tasty.reviews.tastyreviews.global.jwt.repository.RefreshRepository;
-import com.tasty.reviews.tastyreviews.mail.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -64,7 +64,8 @@ public class MemberService {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다"));
 
-//        refreshRepository.deleteByRefresh();
+        //해당하는 회원의 리프레시 토큰 삭제
+        refreshRepository.deleteByUserEmail(member.getEmail());
 
         //회원 삭제
         memberRepository.delete(member);
