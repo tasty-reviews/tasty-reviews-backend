@@ -1,6 +1,6 @@
 package com.tasty.reviews.tastyreviews.member.controller;
 
-import com.tasty.reviews.tastyreviews.member.dto.CreatMemberRequsetDTO;
+import com.tasty.reviews.tastyreviews.member.dto.CreateMemberRequestDTO;
 import com.tasty.reviews.tastyreviews.member.dto.CreateMemberResponseDTO;
 import com.tasty.reviews.tastyreviews.member.dto.NicknameRequestDTO;
 import com.tasty.reviews.tastyreviews.member.service.MemberService;
@@ -17,9 +17,9 @@ public class MemberController {
 
     // 회원가입
     @PostMapping("/join")
-    public ResponseEntity<CreateMemberResponseDTO> join(@RequestBody @Valid CreatMemberRequsetDTO creatMemberRequsetDTO) {
+    public ResponseEntity<CreateMemberResponseDTO> join(@RequestBody @Valid CreateMemberRequestDTO createMemberRequestDTO) {
         // 회원 가입 처리
-        CreateMemberResponseDTO joinResponse = memberService.join(creatMemberRequsetDTO);
+        CreateMemberResponseDTO joinResponse = memberService.join(createMemberRequestDTO);
 
         return ResponseEntity.ok(joinResponse);
     }
