@@ -1,7 +1,8 @@
-package com.tasty.reviews.tastyreviews.controller;
+package com.tasty.reviews.tastyreviews.restaruant.controller;
 
-import com.tasty.reviews.tastyreviews.domain.Restaurant;
-import com.tasty.reviews.tastyreviews.service.RestaurantService;
+
+import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
+import com.tasty.reviews.tastyreviews.restaruant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

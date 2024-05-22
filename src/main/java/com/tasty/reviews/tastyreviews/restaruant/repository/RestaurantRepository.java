@@ -1,6 +1,6 @@
-package com.tasty.reviews.tastyreviews.repository;
+package com.tasty.reviews.tastyreviews.restaruant.repository;
 
-import com.tasty.reviews.tastyreviews.domain.Restaurant;
+import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,5 +15,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     @Query("SELECT r FROM Restaurant r ORDER BY r.viewCount DESC")
     List<Restaurant> getRankingByViewCount();
-
+    
 }

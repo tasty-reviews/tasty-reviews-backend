@@ -1,8 +1,8 @@
-package com.tasty.reviews.tastyreviews.controller;
+package com.tasty.reviews.tastyreviews.usermap.controller;
 
-import com.tasty.reviews.tastyreviews.domain.Restaurant;
-import com.tasty.reviews.tastyreviews.domain.UserMap;
-import com.tasty.reviews.tastyreviews.service.UserMapService;
+import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
+import com.tasty.reviews.tastyreviews.usermap.domain.UserMap;
+import com.tasty.reviews.tastyreviews.usermap.service.UserMapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
