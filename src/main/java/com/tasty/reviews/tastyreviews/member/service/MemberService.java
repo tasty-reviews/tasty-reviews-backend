@@ -3,7 +3,8 @@ package com.tasty.reviews.tastyreviews.member.service;
 import com.tasty.reviews.tastyreviews.global.jwt.repository.RefreshRepository;
 import com.tasty.reviews.tastyreviews.mail.service.MailService;
 import com.tasty.reviews.tastyreviews.member.domain.Member;
-import com.tasty.reviews.tastyreviews.member.dto.CreateMemberDTO;
+import com.tasty.reviews.tastyreviews.member.dto.CreatMemberRequsetDTO;
+import com.tasty.reviews.tastyreviews.member.dto.CreateMemberResponseDTO;
 import com.tasty.reviews.tastyreviews.member.dto.NicknameRequestDTO;
 import com.tasty.reviews.tastyreviews.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,27 +26,29 @@ public class MemberService {
 
 
     @Transactional
-    public void join(CreateMemberDTO createMemberDTO) {
+    public CreateMemberResponseDTO join(CreatMemberRequsetDTO creatMemberRequsetDTO) {
 
-        memberRepository.findByEmail(createMemberDTO.getEmail())
+        memberRepository.findByEmail(creatMemberRequsetDTO.getEmail())
                 .ifPresent(m -> {
                     throw new IllegalStateException("이미 가입된 이메일 입니다");
                 });
 
-        memberRepository.findByNickname(createMemberDTO.getNickname())
+        memberRepository.findByNickname(creatMemberRequsetDTO.getNickname())
                 .ifPresent(m -> {
                     throw new IllegalStateException("이미 존재하는 닉네임 입니다.");
                 });
 
         // 중복된 이메일이 존재하지 않을 경우 회원가입 진행
-        log.info("암호화 전 : {}", createMemberDTO.getPassword());
+        log.info("암호화 전 : {}", creatMemberRequsetDTO.getPassword());
 
-        String encodedPassword = encoder.encode(createMemberDTO.getPassword());
-        createMemberDTO.setPassword(encodedPassword); // 비밀번호 암호화
+        String encodedPassword = encoder.encode(creatMemberRequsetDTO.getPassword());
+        creatMemberRequsetDTO.setPassword(encodedPassword); // 비밀번호 암호화
 
         log.info("암호화 후 : {}", encodedPassword);
 
-        memberRepository.save(createMemberDTO.toEntity());// 저장
+        Member joinMember = memberRepository.save(creatMemberRequsetDTO.toEntity());// 저장
+
+        return new CreateMemberResponseDTO(joinMember); //응답 DTO 리턴
     }
 
     @Transactional
