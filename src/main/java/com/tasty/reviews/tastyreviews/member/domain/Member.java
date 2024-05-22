@@ -46,8 +46,12 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<UserMap> usermaps = new ArrayList<>();
 
-    //비즈니스 로직
+    /*비즈니스 로직*/
     public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 }

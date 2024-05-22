@@ -16,7 +16,8 @@ import lombok.*;
 @NoArgsConstructor
 public class CreateMemberRequestDTO { //회원가입에서 클라이언트가 보낸 정보를 전달하는 DTO
 
-    @Email
+    @Email(message = "이메일 형식이 아닙니다")
+    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\\\.[A-Za-z0-9-]+)*(\\\\.[A-Za-z]{2,})$")
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
     private String email;
 
