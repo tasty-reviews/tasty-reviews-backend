@@ -8,15 +8,13 @@ import com.tasty.reviews.tastyreviews.member.dto.CreateMemberResponseDTO;
 import com.tasty.reviews.tastyreviews.member.dto.NicknameRequestDTO;
 import com.tasty.reviews.tastyreviews.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
-@Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
+@Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -38,13 +36,8 @@ public class MemberService {
                     throw new IllegalStateException("이미 존재하는 닉네임 입니다.");
                 });
 
-        // 중복된 이메일이 존재하지 않을 경우 회원가입 진행
-        log.info("암호화 전 : {}", createMemberRequestDTO.getPassword());
-
         String encodedPassword = encoder.encode(createMemberRequestDTO.getPassword());
         createMemberRequestDTO.setPassword(encodedPassword); // 비밀번호 암호화
-
-        log.info("암호화 후 : {}", encodedPassword);
 
         Member joinMember = memberRepository.save(createMemberRequestDTO.toEntity());// 저장
 
@@ -73,4 +66,23 @@ public class MemberService {
         //회원 삭제
         memberRepository.delete(member);
     }
+
+    @Transactional
+    public void updatePassword(String email, String currentPassword, String newPassword) {
+        Member member = validatePassword(email, currentPassword); //비밀번호 검증
+        member.updatePassword(encoder.encode(newPassword)); //새로운 비밀번호 암호화
+    }
+
+    //비밀번호 검증 로직
+    private Member validatePassword(String email, String currentPassword) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException(""));
+
+        if (!encoder.matches(currentPassword, member.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+        return member;
+    }
 }
+
+
