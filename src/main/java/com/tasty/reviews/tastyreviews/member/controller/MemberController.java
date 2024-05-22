@@ -1,6 +1,7 @@
 package com.tasty.reviews.tastyreviews.member.controller;
 
-import com.tasty.reviews.tastyreviews.member.dto.CreateMemberDTO;
+import com.tasty.reviews.tastyreviews.member.dto.CreatMemberRequsetDTO;
+import com.tasty.reviews.tastyreviews.member.dto.CreateMemberResponseDTO;
 import com.tasty.reviews.tastyreviews.member.dto.NicknameRequestDTO;
 import com.tasty.reviews.tastyreviews.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -16,11 +17,11 @@ public class MemberController {
 
     // 회원가입
     @PostMapping("/join")
-    public ResponseEntity<CreateMemberDTO> join(@RequestBody @Valid CreateMemberDTO createMemberDTO) {
+    public ResponseEntity<CreateMemberResponseDTO> join(@RequestBody @Valid CreatMemberRequsetDTO creatMemberRequsetDTO) {
         // 회원 가입 처리
-        memberService.join(createMemberDTO);
+        CreateMemberResponseDTO joinResponse = memberService.join(creatMemberRequsetDTO);
 
-        return ResponseEntity.ok(createMemberDTO);
+        return ResponseEntity.ok(joinResponse);
     }
 
     //닉네임 변경
