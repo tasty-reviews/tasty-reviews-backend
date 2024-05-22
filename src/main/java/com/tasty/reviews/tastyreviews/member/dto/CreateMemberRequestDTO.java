@@ -14,7 +14,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreatMemberRequsetDTO { //회원가입에서 클라이언트가 보낸 정보를 전달하는 DTO
+public class CreateMemberRequestDTO { //회원가입에서 클라이언트가 보낸 정보를 전달하는 DTO
 
     @Email
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
