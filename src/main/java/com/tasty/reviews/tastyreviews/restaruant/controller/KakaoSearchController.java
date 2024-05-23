@@ -19,8 +19,9 @@ public class KakaoSearchController {
 
     //검색
     @GetMapping("/search")
-    public ResponseEntity<String> placeSearch(@RequestParam("q") String keyword) {
-        return kakaoSearchService.searchPlace(keyword);
+    public ResponseEntity<String> placeSearch(@RequestParam(defaultValue = "FD6") String categoryGroupCode,
+                                              @RequestParam("q") String keyword){
+        return kakaoSearchService.searchPlace(categoryGroupCode, keyword);
     }
 
     //음식점 상세보기
