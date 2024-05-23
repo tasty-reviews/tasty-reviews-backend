@@ -6,6 +6,12 @@ spring:
     driver-class-name: org.h2.Driver
   jwt:
     secret: dljfjaldkfjaksldfjaldkfjlkadsfjakslfjafejfopajdiofjaiodfdlksfjakldfjakldsf
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+
+
 
   h2:
     console:
