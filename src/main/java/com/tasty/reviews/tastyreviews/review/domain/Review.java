@@ -9,6 +9,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
 @Getter
 @Setter
@@ -23,12 +25,12 @@ public class Review extends BaseTimeEntity {
     private Long id;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "Member_id", nullable = false)
     private Member member;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "Restaurant_id", nullable = false)
     private Restaurant restaurant;
 
