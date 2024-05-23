@@ -3,6 +3,8 @@ package com.tasty.reviews.tastyreviews.restaruant.service;
 import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
 import com.tasty.reviews.tastyreviews.restaruant.dto.RestaurantDTO;
 import com.tasty.reviews.tastyreviews.restaruant.repository.RestaurantRepository;
+import com.tasty.reviews.tastyreviews.review.domain.Review;
+import com.tasty.reviews.tastyreviews.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
+    private final ReviewRepository reviewRepository;
 
     public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO) {
 
@@ -61,6 +64,9 @@ public class RestaurantService {
     public RestaurantDTO findByPlace(Long id) {
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 음식점은 존재하지 않습니다." + id));
+
+        List<Review> findReviews = reviewRepository.findByRestaurantId(id);
+        restaurant.setReviews(findReviews);
 
         restaurant.setViewCount(restaurant.getViewCount() + 1);
 

@@ -18,9 +18,10 @@ public class KakaoSearchService {
 
     private final RestaurantService restaurantService;
 
-    public ResponseEntity<String> searchPlace(String keyword) {
+    public ResponseEntity<String> searchPlace(String categoryGroupCode, String keyword) {
         try {
             URI uri = UriComponentsBuilder.fromUriString(KAKAO_API_URL)
+                    .queryParam("category_group_code", categoryGroupCode)
                     .queryParam("query", keyword)
                     .encode(StandardCharsets.UTF_8)
                     .build()
@@ -35,7 +36,7 @@ public class KakaoSearchService {
             ResponseEntity<String> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
 
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
-                
+
                 restaurantService.saveRestaurantsFromApiResponse(responseEntity.getBody());
                 return ResponseEntity.ok(responseEntity.getBody());
             } else {
