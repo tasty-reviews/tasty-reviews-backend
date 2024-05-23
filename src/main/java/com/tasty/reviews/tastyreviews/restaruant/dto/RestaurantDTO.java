@@ -1,7 +1,10 @@
 package com.tasty.reviews.tastyreviews.restaruant.dto;
 
 import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
+import com.tasty.reviews.tastyreviews.review.domain.Review;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,7 +22,7 @@ public class RestaurantDTO {
     private String placeUrl;
     private String x;
     private String y;
-
+    private List<Review> reviews;
 
     // 엔티티로 변환하는 메서드
     public Restaurant toEntity() {
@@ -34,9 +37,9 @@ public class RestaurantDTO {
                 .placeUrl(this.placeUrl)
                 .x(this.x)
                 .y(this.y)
+                .reviews(this.reviews) // 리뷰 목록 포함
                 .build();
     }
-
 
     // 정적 팩토리 메서드를 이용한 DTO 생성
     public static RestaurantDTO fromEntity(Restaurant restaurant) {
@@ -51,6 +54,7 @@ public class RestaurantDTO {
                 .placeUrl(restaurant.getPlaceUrl())
                 .x(restaurant.getX())
                 .y(restaurant.getY())
+                .reviews(restaurant.getReviews()) // 리뷰 목록 포함
                 .build();
     }
 }
