@@ -1,6 +1,5 @@
 package com.tasty.reviews.tastyreviews.usermap.controller;
 
-import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
 import com.tasty.reviews.tastyreviews.usermap.domain.UserMap;
 import com.tasty.reviews.tastyreviews.usermap.service.UserMapService;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +28,9 @@ public class UserMapController {
 
     //내지도에 저장된 음식점 조회
     @GetMapping("/usermaps/{usermapId}")
-    public ResponseEntity<List<Restaurant>> getRestaurantsByUserMapId(@PathVariable("usermapId") Long usermapId) {
-        List<Restaurant> restaurants = userMapService.getRestaurantsByUserMapId(usermapId);
-        return ResponseEntity.ok(restaurants);
+    public ResponseEntity<UserMap> getRestaurantsByUserMapId(@PathVariable("usermapId") Long usermapId) {
+        UserMap userMap = userMapService.getRestaurantsByUserMapId(usermapId);
+        return ResponseEntity.ok(userMap);
     }
 
     //내지도 추가

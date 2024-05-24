@@ -110,7 +110,7 @@ public class UserMapService {
     }
 
     //리스트에 저장된 음식점 조회
-    public List<Restaurant> getRestaurantsByUserMapId(Long usermapId) {
+    public UserMap getRestaurantsByUserMapId(Long usermapId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -120,7 +120,7 @@ public class UserMapService {
         UserMap userMap = userMapRepository.findById(usermapId)
                 .orElseThrow(() -> new IllegalArgumentException("UserMap not found with id: " + usermapId));
 
-        return userMap.getRestaurants();
+        return userMap;
     }
 }
 
