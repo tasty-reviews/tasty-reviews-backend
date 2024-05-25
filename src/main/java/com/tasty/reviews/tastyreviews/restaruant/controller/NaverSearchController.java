@@ -24,13 +24,9 @@ public class NaverSearchController {
 
     @GetMapping("/search/image")
     public ResponseEntity<?> searchNaverImage(@RequestParam String query) {
-        // 네이버 이미지 검색 API의 엔드포인트 URL
         String apiUrl = "https://openapi.naver.com/v1/search/image";
-
-        // 검색어를 URL로 인코딩
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
 
-        // API 호출을 위한 URI 생성
         URI uri = UriComponentsBuilder.fromUriString(apiUrl)
                 .queryParam("query", encodedQuery)
                 .queryParam("display", 15)
@@ -38,24 +34,23 @@ public class NaverSearchController {
                 .encode(StandardCharsets.UTF_8)
                 .toUri();
 
-        // API 호출에 필요한 헤더 설정
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Naver-Client-Id", clientId);
         headers.set("X-Naver-Client-Secret", clientSecret);
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
-        // REST 호출하여 API 응답을 받아옴
         ResponseEntity<RestaurantImageDTO> responseEntity = new RestTemplate()
                 .exchange(uri, HttpMethod.GET, requestEntity, RestaurantImageDTO.class);
 
-        // API 응답에서 첫 번째 이미지 정보만 추출
         RestaurantImageDTO restaurantImageDTO = responseEntity.getBody();
-        RestaurantImageDTO.SearchImageItem firstImage = null;
         if (restaurantImageDTO != null && restaurantImageDTO.getItems() != null && !restaurantImageDTO.getItems().isEmpty()) {
-            firstImage = restaurantImageDTO.getItems().get(0);
+            Map<String, Object> images = new HashMap<>();
+            for (int i = 0; i < Math.min(restaurantImageDTO.getItems().size(), 4); i++) {
+                images.put("image" + (i + 1), restaurantImageDTO.getItems().get(i));
+            }
+            return ResponseEntity.status(responseEntity.getStatusCode()).body(images);
         }
 
-        // 클라이언트에게 첫 번째 이미지 정보만 반환
-        return ResponseEntity.status(responseEntity.getStatusCode()).body(firstImage);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 }
