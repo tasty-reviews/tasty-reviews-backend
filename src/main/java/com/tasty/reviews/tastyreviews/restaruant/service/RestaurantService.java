@@ -53,6 +53,7 @@ public class RestaurantService {
                 restaurant.setPlaceUrl(restaurantJson.getString("place_url"));
                 restaurant.setPhone(restaurantJson.getString("phone"));
                 restaurant.setViewCount(0);  // 초기 조회수는 0으로 설정
+                restaurant.setReviewCount(0);
                 restaurant.setX(restaurantJson.optString("x", "0"));    // 위도, 기본값 0
                 restaurant.setY(restaurantJson.optString("y", "0"));    // 경도, 기본값 0
 
@@ -76,5 +77,10 @@ public class RestaurantService {
     @Transactional(readOnly = true)
     public List<Restaurant> getRankedRestaurantsByViewCount() {
         return restaurantRepository.getRankingByViewCount();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Restaurant> getRankedRestaurantsByReviewCount() {
+        return restaurantRepository.getRankingByReviewCount();
     }
 }

@@ -67,6 +67,8 @@ public class ReviewService {
         review.setRestaurant(restaurant);
         review.setMember(member);
 
+        restaurant.setReviewCount(restaurant.getReviewCount() + 1);
+
         // 리뷰 저장
         return reviewRepository.save(review);
     }
