@@ -2,8 +2,8 @@ package com.tasty.reviews.tastyreviews.restaruant.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tasty.reviews.tastyreviews.global.common.BaseTimeEntity;
-import com.tasty.reviews.tastyreviews.usermap.domain.UserMap;
 import com.tasty.reviews.tastyreviews.review.domain.Review;
+import com.tasty.reviews.tastyreviews.usermap.domain.UserMap;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +31,9 @@ public class Restaurant extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Integer viewCount;
+
+    @Column(nullable = false)
+    private Integer reviewCount;
 
     @Column(nullable = false)
     private String roadAddressName;
