@@ -81,7 +81,7 @@ public class SecurityConfig {
                         .requestMatchers("/place/**")
                         .permitAll()
 
-                        .requestMatchers("/rankings/**")
+                        .requestMatchers("/rankings/**","/usermaps/{usermapId}", "/user/{userId}")
                         .permitAll()
 
                         .requestMatchers("/reissue")
