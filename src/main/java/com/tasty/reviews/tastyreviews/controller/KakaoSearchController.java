@@ -52,7 +52,7 @@ public class KakaoSearchController {
     }*/
 
     @GetMapping("/search")
-    public ResponseEntity<String> getKakaoApiFromAddress(@RequestParam("query") String keyword) {
+    public ResponseEntity<String> getKakaoApiFromAddress(@RequestParam("q") String keyword) {
         try {
             URI uri = UriComponentsBuilder.fromUriString(KAKAO_API_URL)
                     .queryParam("query", keyword)
