@@ -42,21 +42,21 @@ public class UserMapController {
     }
 
     //내지도 추가
-    @PostMapping("/usermap/add")
+    @PostMapping("/usermaps/add")
     public ResponseEntity<UserMap> addUserMap(@RequestBody UserMap userMap) {
         UserMap createduserMap = userMapService.createUserMap(userMap);
         return ResponseEntity.status(HttpStatus.CREATED).body(createduserMap);
     }
 
     //내지도 수정
-     @PutMapping("usermap/{userMapId}")
+     @PutMapping("usermaps/{userMapId}")
     public ResponseEntity<UserMap> updateUserMap(@PathVariable Long userMapId, @RequestBody UserMap userMapDetails) {
         UserMap updatedUserMap = userMapService.updateUserMap(userMapId, userMapDetails);
         return ResponseEntity.ok(updatedUserMap);
     }
 
     //내지도 삭제
-    @DeleteMapping("/usermap/{userMapId}")
+    @DeleteMapping("/usermaps/{userMapId}")
     public ResponseEntity<Void> deleteuserMap(@PathVariable Long userMapId) {
         userMapService.deleteUserMap(userMapId);
         return ResponseEntity.noContent().build();
