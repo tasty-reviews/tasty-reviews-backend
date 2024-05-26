@@ -81,6 +81,9 @@ public class SecurityConfig {
                         .requestMatchers("/place/**")
                         .permitAll()
 
+                        .requestMatchers("/api/restaurants/**")
+                        .permitAll()
+
                         .requestMatchers("/rankings/**","/usermaps/{usermapId}", "/user/{userId}")
                         .permitAll()
 
