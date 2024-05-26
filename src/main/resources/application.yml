@@ -13,15 +13,13 @@ spring:
       max-file-size: 2MB
       max-request-size: 2MB
 
-file:
-  upload-dir: ./uploads
 
   h2:
     console:
       enabled: true
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
@@ -41,3 +39,6 @@ logging:
 
       hibernate:
         SQL: DEBUG # Hibernate SQL 로그 레벨 설정
+
+file:
+  upload-dir: ./uploads
