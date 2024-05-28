@@ -5,6 +5,7 @@ import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
 import com.tasty.reviews.tastyreviews.review.domain.Review;
 import com.tasty.reviews.tastyreviews.member.repository.MemberRepository;
 import com.tasty.reviews.tastyreviews.restaruant.repository.RestaurantRepository;
+import com.tasty.reviews.tastyreviews.review.dto.ReviewResponseDTO;
 import com.tasty.reviews.tastyreviews.review.repository.ReviewRepository;
 import com.tasty.reviews.tastyreviews.upload.domain.UploadedFile;
 import com.tasty.reviews.tastyreviews.upload.repository.UploadedFileRepository;
@@ -57,7 +58,7 @@ public class ReviewService {
 
     // 리뷰 생성
     @Transactional
-    public Review createReview(Long restaurantId, String comment, int rating, List<MultipartFile> files) throws IOException {
+    public ReviewResponseDTO createReview(Long restaurantId, String comment, int rating, List<MultipartFile> files) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalStateException("User must be logged in to create a review");
@@ -96,7 +97,9 @@ public class ReviewService {
 
             // 저장된 리뷰에 파일 리스트 추가
             savedReview.setImages(uploadedFiles);
-            return reviewRepository.save(savedReview); // 리뷰를 다시 저장하여 파일 정보를 업데이트
+            reviewRepository.save(savedReview); // 리뷰를 다시 저장하여 파일 정보를 업데이트
+
+            return new ReviewResponseDTO(savedReview);
         } catch (RuntimeException e) {
             reviewRepository.delete(savedReview); // 파일 저장 실패 시, 리뷰 삭제
             throw e; // 예외를 다시 던져 트랜잭션이 롤백되도록 함
@@ -106,7 +109,7 @@ public class ReviewService {
 
     // 리뷰 수정 (이미지 포함)
     @Transactional
-    public Review updateReview(Long reviewId, String comment, int rating, List<MultipartFile> files) throws IOException {
+    public ReviewResponseDTO  updateReview(Long reviewId, String comment, int rating, List<MultipartFile> files) throws IOException {
         isLogined();
 
         Review existingReview = reviewRepository.findById(reviewId)
@@ -137,7 +140,8 @@ public class ReviewService {
             existingReview.setImages(uploadedFiles);
         }
 
-        return reviewRepository.save(existingReview);
+        Review savedReview = reviewRepository.save(existingReview);
+        return new ReviewResponseDTO(savedReview);
     }
     // 리뷰 삭제
     @Transactional
