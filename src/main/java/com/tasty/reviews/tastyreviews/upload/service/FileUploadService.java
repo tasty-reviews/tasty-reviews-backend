@@ -49,10 +49,11 @@ public class FileUploadService {
         // 파일 저장
         Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
 
-        // 파일 정보 저장
+        // 파일 정보 설정
         UploadedFile uploadedFile = new UploadedFile();
         uploadedFile.setOriginalFileName(originalFileName);
         uploadedFile.setStoredFileName(storedFileName);
-        return uploadedFileRepository.save(uploadedFile);
+
+        return uploadedFile;
     }
 }

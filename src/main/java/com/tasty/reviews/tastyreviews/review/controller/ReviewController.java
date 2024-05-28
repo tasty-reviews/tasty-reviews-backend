@@ -32,24 +32,6 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 
-   /* // 리뷰 생성
-    @PostMapping("/review/add/{restaurantId}")
-    public ResponseEntity<Review> addReviewToRestaurant(@PathVariable(name = "restaurantId") Long restaurantId,
-                                                        @RequestPart("review") String reviewJson,
-                                                        @RequestPart("files") List<MultipartFile> files) {
-        try {
-            // JSON 문자열을 Review 객체로 변환
-            Review review = new ObjectMapper().readValue(reviewJson, Review.class);
-
-            // 리뷰 생성 서비스 호출
-            Review savedReview = reviewService.createReview(restaurantId, review.getComment(), review.getRating(), files);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }*/
-
     // 리뷰 생성
     @PostMapping("/review/add/{restaurantId}")
     public ResponseEntity<Review> addReviewToRestaurant(@PathVariable(name = "restaurantId") Long restaurantId,
@@ -59,14 +41,6 @@ public class ReviewController {
         Review savedReview = reviewService.createReview(restaurantId, comment, rating, files);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
     }
-
-    // 리뷰 수정
-/*    @PutMapping("/reviews/{reviewId}")
-    public ResponseEntity<Review> updateReview(@PathVariable Long reviewId, @RequestBody Review review) {
-        Review updatedReview = reviewService.updateReview(reviewId, review);
-        return ResponseEntity.ok(updatedReview);
-    }*/
-
 
     // 리뷰 수정
     @PutMapping("/reviews/{reviewId}")
