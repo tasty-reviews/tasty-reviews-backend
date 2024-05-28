@@ -25,9 +25,9 @@ public class KakaoSearchController {
     }
 
     //음식점 상세보기
-    @GetMapping("/place/{id}")
-    public ResponseEntity<RestaurantDTO> findByPlace(@PathVariable Long id) {
-        RestaurantDTO restaurantDto = restaurantService.findByPlace(id);
+    @GetMapping("/place/{place_id}")
+    public ResponseEntity<RestaurantDTO> findByPlace(@PathVariable("place_id") String placeId) {
+        RestaurantDTO restaurantDto = restaurantService.findByPlace(placeId);
 
         if (restaurantDto != null) {
             return ResponseEntity.ok(restaurantDto);
