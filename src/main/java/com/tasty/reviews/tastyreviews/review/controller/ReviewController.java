@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -30,20 +32,49 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 
-    // 리뷰 생성
-    @PostMapping("/reviews/{restaurantId}")
+   /* // 리뷰 생성
+    @PostMapping("/review/add/{restaurantId}")
     public ResponseEntity<Review> addReviewToRestaurant(@PathVariable(name = "restaurantId") Long restaurantId,
-                                                        @RequestBody Review review)
-    {
-        // 특정 식당에 리뷰 추가
-        Review savedReview = reviewService.createReview(restaurantId, review);
+                                                        @RequestPart("review") String reviewJson,
+                                                        @RequestPart("files") List<MultipartFile> files) {
+        try {
+            // JSON 문자열을 Review 객체로 변환
+            Review review = new ObjectMapper().readValue(reviewJson, Review.class);
+
+            // 리뷰 생성 서비스 호출
+            Review savedReview = reviewService.createReview(restaurantId, review.getComment(), review.getRating(), files);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }*/
+
+    // 리뷰 생성
+    @PostMapping("/review/add/{restaurantId}")
+    public ResponseEntity<Review> addReviewToRestaurant(@PathVariable(name = "restaurantId") Long restaurantId,
+                                                        @RequestParam("comment") String comment,
+                                                        @RequestParam("rating") int rating,
+                                                        @RequestParam("files") List<MultipartFile> files) throws IOException {
+        Review savedReview = reviewService.createReview(restaurantId, comment, rating, files);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
     }
 
     // 리뷰 수정
-    @PutMapping("/reviews/{reviewId}")
+/*    @PutMapping("/reviews/{reviewId}")
     public ResponseEntity<Review> updateReview(@PathVariable Long reviewId, @RequestBody Review review) {
         Review updatedReview = reviewService.updateReview(reviewId, review);
+        return ResponseEntity.ok(updatedReview);
+    }*/
+
+
+    // 리뷰 수정
+    @PutMapping("/reviews/{reviewId}")
+    public ResponseEntity<Review> updateReview(@PathVariable Long reviewId,
+                                               @RequestParam("comment") String comment,
+                                               @RequestParam("rating") int rating,
+                                               @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
+        Review updatedReview = reviewService.updateReview(reviewId, comment, rating, files);
         return ResponseEntity.ok(updatedReview);
     }
 
