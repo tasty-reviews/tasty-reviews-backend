@@ -58,7 +58,7 @@ public class ReviewService {
 
     // 리뷰 생성
     @Transactional
-    public ReviewResponseDTO createReview(Long restaurantId, String comment, int rating, List<MultipartFile> files) throws IOException {
+    public ReviewResponseDTO createReview(Long restaurantId, String comment, int rating, List<MultipartFile> files) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalStateException("User must be logged in to create a review");
@@ -71,12 +71,13 @@ public class ReviewService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant ID: " + restaurantId));
 
-        // 리뷰 객체를 생성하고 기본 정보 설정
+        // 먼저 리뷰 객체를 생성하고 기본 정보 설정
         Review review = new Review();
         review.setComment(comment);
         review.setRating(rating);
         review.setRestaurant(restaurant);
         review.setMember(member);
+        restaurant.setReviewCount(restaurant.getReviewCount() + 1);
 
         // 리뷰를 먼저 저장
         Review savedReview = reviewRepository.save(review);
@@ -109,7 +110,7 @@ public class ReviewService {
 
     // 리뷰 수정 (이미지 포함)
     @Transactional
-    public ReviewResponseDTO  updateReview(Long reviewId, String comment, int rating, List<MultipartFile> files) throws IOException {
+    public ReviewResponseDTO updateReview(Long reviewId, String comment, int rating, List<MultipartFile> files) throws IOException {
         isLogined();
 
         Review existingReview = reviewRepository.findById(reviewId)
@@ -143,7 +144,8 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(existingReview);
         return new ReviewResponseDTO(savedReview);
     }
-    // 리뷰 삭제
+
+    //리뷰 삭제
     @Transactional
     public void deleteReview(Long reviewId) {
         isLogined();
@@ -155,9 +157,12 @@ public class ReviewService {
     }
 
     private static void isLogined() {
+        // 사용자의 인증 정보를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 사용자가 로그인되어 있는지 확인
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("User must be logged in to perform this action");
+            throw new IllegalStateException("User must be logged in to create a review");
         }
     }
 }

@@ -23,14 +23,14 @@ public class ReviewResponseDTO {
     private List<UploadedFile> images;
 
     public ReviewResponseDTO(Review review) {
-        this.id = review.getId();
-        this.memberId = review.getMember().getId();
-        this.comment = review.getComment();
-        this.createdDate = review.getCreatedDate();
-        this.modifiedDate = review.getModifiedDate();
-        this.rating = review.getRating();
-        this.restaurantId = review.getRestaurant().getId();
-        this.images = review.getImages();
-    }
+            this.id = review.getId();
+            this.memberId = review.getMember().getId();
+            this.comment = review.getComment();
+            this.createdDate = review.getCreatedDate();
+            this.modifiedDate = review.getModifiedDate();
+            this.rating = review.getRating();
+            this.restaurantId = review.getRestaurant().getId();
+            this.images = review.getImages();
+        }
 
 }

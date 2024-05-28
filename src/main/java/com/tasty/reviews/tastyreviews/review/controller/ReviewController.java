@@ -36,9 +36,9 @@ public class ReviewController {
     // 리뷰 생성
     @PostMapping("/review/add/{restaurantId}")
     public ResponseEntity<ReviewResponseDTO> addReviewToRestaurant(@PathVariable(name = "restaurantId") Long restaurantId,
-                                                        @RequestParam("comment") String comment,
-                                                        @RequestParam("rating") int rating,
-                                                        @RequestParam("files") List<MultipartFile> files) throws IOException {
+                                                                   @RequestParam("comment") String comment,
+                                                                   @RequestParam("rating") int rating,
+                                                                   @RequestParam("files") List<MultipartFile> files) {
         ReviewResponseDTO savedReview = reviewService.createReview(restaurantId, comment, rating, files);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
     }

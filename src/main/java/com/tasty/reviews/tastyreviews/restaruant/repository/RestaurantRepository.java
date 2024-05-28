@@ -13,7 +13,13 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     Optional<Restaurant> findByPlaceNameAndRoadAddressName(String placeName, String roadAddressName);
 
+    Optional<Restaurant> findByPlaceId(String placeId);
+
     @Query("SELECT r FROM Restaurant r ORDER BY r.viewCount DESC")
     List<Restaurant> getRankingByViewCount();
+
+    @Query("SELECT r FROM Restaurant r ORDER BY r.reviewCount DESC")
+    List<Restaurant> getRankingByReviewCount();
+
     
 }
