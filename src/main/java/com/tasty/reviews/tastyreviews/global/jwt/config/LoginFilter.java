@@ -81,11 +81,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         ObjectMapper mapper = new ObjectMapper();
         String nickname = findNickname(username); //DB에서 닉네임 가져오기
+        Long id = findId(username);
 
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("email", username);
         responseData.put("role", role);
         responseData.put("nickname", nickname);
+        responseData.put("id", id);
 
         response.setHeader("Authorization", access); // Authorization 헤더에 access 토큰 저장
         response.addCookie(createCookie("refresh", refresh)); // 쿠키에 refresh 토큰 저장
@@ -131,5 +133,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 이메일이 없습니다"));
 
         return member.getNickname();
+    }
+
+    private Long findId(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("일치하는 이메일이 없습니다"));
+
+        return member.getId();
+
     }
 }

@@ -1,9 +1,6 @@
 package com.tasty.reviews.tastyreviews.member.controller;
 
-import com.tasty.reviews.tastyreviews.member.dto.CreateMemberRequestDTO;
-import com.tasty.reviews.tastyreviews.member.dto.CreateMemberResponseDTO;
-import com.tasty.reviews.tastyreviews.member.dto.NicknameRequestDTO;
-import com.tasty.reviews.tastyreviews.member.dto.UpdateRequestPasswordDTO;
+import com.tasty.reviews.tastyreviews.member.dto.*;
 import com.tasty.reviews.tastyreviews.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +23,17 @@ public class MemberController {
         return ResponseEntity.ok(joinResponse);
     }
 
+    //회원 조회
+    @GetMapping("/mypage/{id}")
+    public ResponseEntity<MemberResponseDTO> myPage(@PathVariable Long id) {
+
+        MemberResponseDTO member = memberService.myPage(id);
+
+        return ResponseEntity.ok(member);
+    }
+
     //닉네임 변경
-    @PatchMapping("/mypage/setting/{id}/nickname")
+    @PatchMapping("/mypage/{id}/setting/nickname")
     public ResponseEntity<NicknameRequestDTO> updateNickname(@RequestBody NicknameRequestDTO requestDTO,
                                                              @PathVariable Long id) {
         memberService.updateNickname(requestDTO, id);
@@ -36,7 +42,7 @@ public class MemberController {
     }
 
     //회원 탈퇴
-    @DeleteMapping("/mypage/setting/{id}/delete")
+    @DeleteMapping("/mypage/{id}/setting/delete")
     public ResponseEntity<String> deleteMember(@PathVariable Long id) {
 
         memberService.deleteMember(id);
