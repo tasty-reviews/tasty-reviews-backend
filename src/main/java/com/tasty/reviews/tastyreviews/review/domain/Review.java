@@ -1,13 +1,17 @@
 package com.tasty.reviews.tastyreviews.review.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tasty.reviews.tastyreviews.global.common.BaseTimeEntity;
-import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
 import com.tasty.reviews.tastyreviews.member.domain.Member;
+import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
+import com.tasty.reviews.tastyreviews.upload.domain.UploadedFile;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -40,6 +44,10 @@ public class Review extends BaseTimeEntity {
     @Column(nullable = false)
     private String comment;
 
-    private String imageURL;
+    // Review 엔티티와 UploadedFile 엔티티 간의 양방향 관계를 맺기 위해 추가된 필드
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    private List<UploadedFile> images;
+
 
 }
