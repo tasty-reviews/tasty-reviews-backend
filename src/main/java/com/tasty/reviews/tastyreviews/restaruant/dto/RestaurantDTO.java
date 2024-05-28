@@ -20,6 +20,7 @@ public class RestaurantDTO {
     private String roadAddressname;
     private String phone;
     private String placeUrl;
+    private String placeId;
     private String x;
     private String y;
     private List<Review> reviews;
@@ -35,6 +36,7 @@ public class RestaurantDTO {
                 .roadAddressName(this.roadAddressname)
                 .phone(this.phone)
                 .placeUrl(this.placeUrl)
+                .placeId(this.placeId)
                 .x(this.x)
                 .y(this.y)
                 .reviews(this.reviews) // 리뷰 목록 포함
@@ -52,6 +54,7 @@ public class RestaurantDTO {
                 .roadAddressname(restaurant.getRoadAddressName())
                 .phone(restaurant.getPhone())
                 .placeUrl(restaurant.getPlaceUrl())
+                .placeId(restaurant.getPlaceId())
                 .x(restaurant.getX())
                 .y(restaurant.getY())
                 .reviews(restaurant.getReviews()) // 리뷰 목록 포함

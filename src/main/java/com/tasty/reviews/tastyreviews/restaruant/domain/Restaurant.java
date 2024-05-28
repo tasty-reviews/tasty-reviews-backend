@@ -27,6 +27,9 @@ public class Restaurant extends BaseTimeEntity {
     private String placeName;
 
     @Column(nullable = false)
+    private String placeId;
+
+    @Column(nullable = false)
     private String categoryName;
 
     @Column(nullable = false)
