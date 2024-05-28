@@ -5,8 +5,10 @@ import com.tasty.reviews.tastyreviews.mail.service.MailService;
 import com.tasty.reviews.tastyreviews.member.domain.Member;
 import com.tasty.reviews.tastyreviews.member.dto.CreateMemberRequestDTO;
 import com.tasty.reviews.tastyreviews.member.dto.CreateMemberResponseDTO;
+import com.tasty.reviews.tastyreviews.member.dto.MemberResponseDTO;
 import com.tasty.reviews.tastyreviews.member.dto.NicknameRequestDTO;
 import com.tasty.reviews.tastyreviews.member.repository.MemberRepository;
+import com.tasty.reviews.tastyreviews.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,8 @@ public class MemberService {
     private final MailService mailService;
     private final BCryptPasswordEncoder encoder;
     private final RefreshRepository refreshRepository;
-
+    private final ReviewRepository reviewRepository;
+//    private final ModelMapper modelMapper;
 
     @Transactional
     public CreateMemberResponseDTO join(CreateMemberRequestDTO createMemberRequestDTO) {
@@ -42,6 +45,20 @@ public class MemberService {
         Member joinMember = memberRepository.save(createMemberRequestDTO.toEntity());// 저장
 
         return new CreateMemberResponseDTO(joinMember); //응답 DTO 리턴
+    }
+
+    @Transactional(readOnly = true)
+    public MemberResponseDTO myPage(Long id) {
+
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 없습니다."));
+
+        return MemberResponseDTO.builder()
+                .id(member.getId())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .reviewList(member.getReviews())
+                .build();
     }
 
     @Transactional

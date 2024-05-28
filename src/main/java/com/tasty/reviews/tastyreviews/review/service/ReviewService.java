@@ -113,7 +113,9 @@ public class ReviewService {
         // 저장된 리뷰에 파일 리스트 추가
         savedReview.setImages(uploadedFiles);
         reviewRepository.save(savedReview); // 리뷰를 다시 저장하여 파일 정보를 업데이트
+        restaurant.setReviewCount(restaurant.getReviewCount() + 1);
 
+        // 리뷰 저장
         return new ReviewResponseDTO(savedReview);
     }
 
@@ -169,7 +171,7 @@ public class ReviewService {
         return new ReviewResponseDTO(savedReview);
     }
 
-    // 리뷰 삭제
+    //리뷰 삭제
     @Transactional
     public void deleteReview(Long reviewId) {
         isLogined();
@@ -181,9 +183,13 @@ public class ReviewService {
     }
 
     private static void isLogined() {
+        // 사용자의 인증 정보를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 사용자가 로그인되어 있는지 확인
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("User must be logged in to perform this action");
+            throw new IllegalStateException("User must be logged in to create a review");
         }
     }
+
 }

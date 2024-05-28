@@ -25,7 +25,7 @@ public class RankingController {
         List<Restaurant> rankings;
         switch (type) {
             case "VIEW_COUNT" -> rankings = restaurantService.getRankedRestaurantsByViewCount();
-//            case "REVIEW_COUNT" -> rankings = restaurantService.getRankedRestaurantsByReviewCount();
+            case "REVIEW_COUNT" -> rankings = restaurantService.getRankedRestaurantsByReviewCount();
             default -> rankings = new ArrayList<>(); // 디폴트 케이스에서 초기화
         }
 
