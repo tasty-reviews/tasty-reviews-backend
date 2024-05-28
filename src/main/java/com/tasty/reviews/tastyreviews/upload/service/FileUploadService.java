@@ -2,6 +2,7 @@ package com.tasty.reviews.tastyreviews.upload.service;
 
 import com.tasty.reviews.tastyreviews.upload.domain.UploadedFile;
 import com.tasty.reviews.tastyreviews.upload.repository.UploadedFileRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,16 +16,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class FileUploadService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
     private final List<String> allowedMimeTypes = List.of("image/jpeg", "image/png", "image/gif");
     private final UploadedFileRepository uploadedFileRepository;
-
-    public FileUploadService(UploadedFileRepository uploadedFileRepository) {
-        this.uploadedFileRepository = uploadedFileRepository;
-    }
 
     public UploadedFile storeFile(MultipartFile file) throws IOException {
         // 파일이 비어 있는지 확인
