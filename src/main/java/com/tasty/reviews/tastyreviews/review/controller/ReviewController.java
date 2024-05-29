@@ -40,6 +40,8 @@ public class ReviewController {
                                                                    @RequestParam("rating") int rating,
                                                                    @RequestParam("files") List<MultipartFile> files) {
         ReviewResponseDTO savedReview = reviewService.createReview(restaurantId, comment, rating, files);
+        reviewService.restaurantAgvRatingUpdate(savedReview.getRestaurantId());//음식점 별점 반영
+
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
     }
 
