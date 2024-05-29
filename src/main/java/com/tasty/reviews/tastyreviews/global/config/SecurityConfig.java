@@ -6,7 +6,9 @@ import com.tasty.reviews.tastyreviews.global.jwt.service.JWTUtil;
 import com.tasty.reviews.tastyreviews.global.jwt.config.LoginFilter;
 import com.tasty.reviews.tastyreviews.member.repository.MemberRepository;
 import com.tasty.reviews.tastyreviews.global.jwt.repository.RefreshRepository;
+import jakarta.servlet.SessionCookieConfig;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -103,6 +105,19 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
+    }
+
+    @Bean
+    public ServletContextInitializer servletContextInitializer() {
+        return servletContext -> {
+            SessionCookieConfig sessionCookieConfig = servletContext.getSessionCookieConfig();
+            sessionCookieConfig.setName("JSESSIONID");
+            sessionCookieConfig.setPath("/");
+            sessionCookieConfig.setMaxAge(3600);
+            sessionCookieConfig.setSecure(false);
+            sessionCookieConfig.setHttpOnly(false);
+            sessionCookieConfig.setComment("SameSite=None; Secure"); // 추가
+        };
     }
 
 }
