@@ -33,10 +33,10 @@ public class Restaurant extends BaseTimeEntity {
     private String categoryName;
 
     @Column(nullable = false)
-    private Integer viewCount;
+    private int viewCount;
 
     @Column(nullable = false)
-    private Integer reviewCount;
+    private int reviewCount;
 
     @Column(nullable = false)
     private String roadAddressName;
@@ -47,7 +47,10 @@ public class Restaurant extends BaseTimeEntity {
     @Column(nullable = false)
     private String y;
 
+    private String avgRating;
+
     private String phone;
+
     private String imageUrl;
     private String placeUrl;
 
@@ -70,4 +73,12 @@ public class Restaurant extends BaseTimeEntity {
         }
     }
 
+    //음식점 평점 업데이트 로직
+    public void updateRating(int totalRating, int reviewCount) {
+        double avg = (double) totalRating / reviewCount;
+
+        String stringAvg = String.format("%.2f", avg);
+
+        this.avgRating = stringAvg;
+    }
 }

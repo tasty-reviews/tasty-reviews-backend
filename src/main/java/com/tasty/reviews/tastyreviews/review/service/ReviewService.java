@@ -1,10 +1,10 @@
 package com.tasty.reviews.tastyreviews.review.service;
 
 import com.tasty.reviews.tastyreviews.member.domain.Member;
-import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
-import com.tasty.reviews.tastyreviews.review.domain.Review;
 import com.tasty.reviews.tastyreviews.member.repository.MemberRepository;
+import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
 import com.tasty.reviews.tastyreviews.restaruant.repository.RestaurantRepository;
+import com.tasty.reviews.tastyreviews.review.domain.Review;
 import com.tasty.reviews.tastyreviews.review.dto.ReviewResponseDTO;
 import com.tasty.reviews.tastyreviews.review.repository.ReviewRepository;
 import com.tasty.reviews.tastyreviews.upload.domain.UploadedFile;
@@ -164,5 +164,24 @@ public class ReviewService {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalStateException("User must be logged in to create a review");
         }
+    }
+
+    @Transactional
+    public void restaurantAgvRatingUpdate(Long restaurantId) {
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 음식점이 없습니다"));
+
+        //레스토랑에서 리뷰 가져오기
+        List<Review> reviews = restaurant.getReviews();
+
+        int totalRating = 0;
+        int reviewCount = restaurant.getReviewCount();
+
+        for (Review review : reviews) {
+            totalRating += review.getRating();
+        }
+
+        restaurant.updateRating(totalRating, reviewCount);
     }
 }

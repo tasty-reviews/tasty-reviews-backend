@@ -16,7 +16,9 @@ public class RestaurantDTO {
     private String placeName;
     private String categoryName;
     private String imageUrl;
-    private Integer viewCount;
+    private int viewCount;
+    private int reviewCount;
+    private String avgRating;
     private String roadAddressname;
     private String phone;
     private String placeUrl;
@@ -33,6 +35,8 @@ public class RestaurantDTO {
                 .categoryName(this.categoryName)
                 .imageUrl(this.imageUrl)
                 .viewCount(this.viewCount)
+                .reviewCount(this.reviewCount)
+                .avgRating(this.avgRating)
                 .roadAddressName(this.roadAddressname)
                 .phone(this.phone)
                 .placeUrl(this.placeUrl)
@@ -51,6 +55,8 @@ public class RestaurantDTO {
                 .categoryName(restaurant.getCategoryName())
                 .imageUrl(restaurant.getImageUrl())
                 .viewCount(restaurant.getViewCount())
+                .reviewCount(restaurant.getReviewCount())
+                .avgRating(restaurant.getAvgRating())
                 .roadAddressname(restaurant.getRoadAddressName())
                 .phone(restaurant.getPhone())
                 .placeUrl(restaurant.getPlaceUrl())
