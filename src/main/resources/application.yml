@@ -8,6 +8,11 @@ spring:
     secret: dljfjaldkfjaksldfjaldkfjlkadsfjakslfjafejfopajdiofjaiodfdlksfjakldfjakldsf
   config:
     import: classpath:application-mail.yml
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+
 
   h2:
     console:
@@ -39,3 +44,6 @@ logging:
 
       hibernate:
         SQL: DEBUG # Hibernate SQL 로그 레벨 설정
+
+file:
+  upload-dir: ./uploads

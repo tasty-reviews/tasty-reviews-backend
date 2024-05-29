@@ -110,17 +110,16 @@ public class UserMapService {
     }
 
     //리스트에 저장된 음식점 조회
-    public List<Restaurant> getRestaurantsByUserMapId(Long usermapId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("User must be logged in to delete a user map");
-        }
-
+    public UserMap getRestaurantsByUserMapId(Long usermapId) {
         UserMap userMap = userMapRepository.findById(usermapId)
                 .orElseThrow(() -> new IllegalArgumentException("UserMap not found with id: " + usermapId));
 
-        return userMap.getRestaurants();
+        return userMap;
+    }
+
+    //특정 사용자가 작성한 사용지지도 리스트 조회
+    public List<UserMap> getUserMapsByUserId(Long userId) {
+        return userMapRepository.findByMemberId(userId);
     }
 }
 

@@ -1,12 +1,15 @@
 package com.tasty.reviews.tastyreviews.review.controller;
 
 import com.tasty.reviews.tastyreviews.review.domain.Review;
+import com.tasty.reviews.tastyreviews.review.dto.ReviewResponseDTO;
 import com.tasty.reviews.tastyreviews.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -31,19 +34,22 @@ public class ReviewController {
     }
 
     // 리뷰 생성
-    @PostMapping("/reviews/{restaurantId}")
-    public ResponseEntity<Review> addReviewToRestaurant(@PathVariable(name = "restaurantId") Long restaurantId,
-                                                        @RequestBody Review review)
-    {
-        // 특정 식당에 리뷰 추가
-        Review savedReview = reviewService.createReview(restaurantId, review);
+    @PostMapping("/review/add/{restaurantId}")
+    public ResponseEntity<ReviewResponseDTO> addReviewToRestaurant(@PathVariable(name = "restaurantId") Long restaurantId,
+                                                                   @RequestParam("comment") String comment,
+                                                                   @RequestParam("rating") int rating,
+                                                                   @RequestParam("files") List<MultipartFile> files) {
+        ReviewResponseDTO savedReview = reviewService.createReview(restaurantId, comment, rating, files);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
     }
 
     // 리뷰 수정
     @PutMapping("/reviews/{reviewId}")
-    public ResponseEntity<Review> updateReview(@PathVariable Long reviewId, @RequestBody Review review) {
-        Review updatedReview = reviewService.updateReview(reviewId, review);
+    public ResponseEntity<ReviewResponseDTO> updateReview(@PathVariable Long reviewId,
+                                               @RequestParam("comment") String comment,
+                                               @RequestParam("rating") int rating,
+                                               @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
+        ReviewResponseDTO updatedReview = reviewService.updateReview(reviewId, comment, rating, files);
         return ResponseEntity.ok(updatedReview);
     }
 
