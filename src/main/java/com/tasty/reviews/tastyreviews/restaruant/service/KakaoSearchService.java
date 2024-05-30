@@ -29,7 +29,7 @@ public class KakaoSearchService {
             List<JSONObject> results = new ArrayList<>();
             JSONArray combinedDocuments = new JSONArray();
 
-            for (int page = 1; page <= 3; page++) {
+            for (int page = 1; page <= 2; page++) {
                 URI uri = UriComponentsBuilder.fromUriString(KAKAO_API_URL)
                         .queryParam("category_group_code", categoryGroupCode)
                         .queryParam("query", keyword)
