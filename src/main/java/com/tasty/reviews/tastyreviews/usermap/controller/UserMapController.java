@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -43,15 +45,28 @@ public class UserMapController {
 
     //내지도 추가
     @PostMapping("/usermaps/add")
-    public ResponseEntity<UserMap> addUserMap(@RequestBody UserMap userMap) {
-        UserMap createduserMap = userMapService.createUserMap(userMap);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createduserMap);
+    public ResponseEntity<UserMap> addUserMap(@RequestParam("name") String name,
+                                              @RequestParam("description") String description,
+                                              @RequestParam("userMapImage") MultipartFile file) throws IOException {
+        UserMap userMap = new UserMap();
+        userMap.setName(name);
+        userMap.setDescription(description);
+
+        UserMap createdUserMap = userMapService.createUserMap(userMap, file);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUserMap);
     }
 
     //내지도 수정
-     @PutMapping("usermaps/{userMapId}")
-    public ResponseEntity<UserMap> updateUserMap(@PathVariable Long userMapId, @RequestBody UserMap userMapDetails) {
-        UserMap updatedUserMap = userMapService.updateUserMap(userMapId, userMapDetails);
+    @PutMapping("usermaps/{userMapId}")
+    public ResponseEntity<UserMap>  updateUserMap(@PathVariable Long userMapId,
+                                                  @RequestParam("name") String name,
+                                                  @RequestParam("description") String description,
+                                                  @RequestParam("userMapImage") MultipartFile file) throws IOException {
+        UserMap userMapDetails = new UserMap();
+        userMapDetails.setName(name);
+        userMapDetails.setDescription(description);
+
+        UserMap updatedUserMap = userMapService.updateUserMap(userMapId, userMapDetails, file);
         return ResponseEntity.ok(updatedUserMap);
     }
 
