@@ -30,7 +30,7 @@ public class UserMap {
     @Column(nullable = false)
     private String description;
 
-    private String imageurl;
+    private String myMapImage;
 
     @ManyToMany
     @JoinTable(
