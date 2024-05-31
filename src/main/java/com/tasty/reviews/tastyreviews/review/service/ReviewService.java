@@ -49,7 +49,6 @@ public class ReviewService {
         return reviews;
     }
 
-
     // 특정 회원의 리뷰 조회
     public List<Review> getReviewsByMemberId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -81,27 +80,28 @@ public class ReviewService {
         restaurant.setReviewCount(restaurant.getReviewCount() + 1);
         Review savedReview = reviewRepository.save(review);
 
-        List<UploadedFile> uploadedFiles = files.stream()
-                .map(file -> {
-                    try {
-                        String storedFileName = fileUploadService.storeFile(file);
-                        UploadedFile uploadedFile = new UploadedFile();
-                        uploadedFile.setOriginalFileName(file.getOriginalFilename());
-                        uploadedFile.setStoredFileName(storedFileName);
-                        uploadedFile.setReview(savedReview);
-                        return uploadedFileRepository.save(uploadedFile);
-                    } catch (IOException e) {
-                        throw new RuntimeException("Failed to store file", e);
-                    }
-                })
-                .collect(Collectors.toList());
+        if (files != null && !files.isEmpty()) {
+            List<UploadedFile> uploadedFiles = files.stream()
+                    .filter(file -> !file.isEmpty()) // 비어있는 파일은 필터링
+                    .map(file -> {
+                        try {
+                            String storedFileName = fileUploadService.storeFile(file);
+                            UploadedFile uploadedFile = new UploadedFile();
+                            uploadedFile.setOriginalFileName(file.getOriginalFilename());
+                            uploadedFile.setStoredFileName(storedFileName);
+                            uploadedFile.setReview(savedReview);
+                            return uploadedFileRepository.save(uploadedFile);
+                        } catch (IOException e) {
+                            throw new RuntimeException("Failed to store file", e);
+                        }
+                    })
+                    .collect(Collectors.toList());
 
-        savedReview.setImages(uploadedFiles);
-        reviewRepository.save(savedReview);
+            savedReview.setImages(uploadedFiles);
+        }
+
         return new ReviewResponseDTO(savedReview);
     }
-
-
 
     // 리뷰 수정 (이미지 포함)
     @Transactional
@@ -137,7 +137,7 @@ public class ReviewService {
         return new ReviewResponseDTO(reviewRepository.save(existingReview));
     }
 
-    //리뷰 삭제
+    // 리뷰 삭제
     @Transactional
     public void deleteReview(Long reviewId) {
         isLogined();
@@ -164,7 +164,7 @@ public class ReviewService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 음식점이 없습니다"));
 
-        //레스토랑에서 리뷰 가져오기
+        // 레스토랑에서 리뷰 가져오기
         List<Review> reviews = restaurant.getReviews();
 
         int totalRating = 0;
