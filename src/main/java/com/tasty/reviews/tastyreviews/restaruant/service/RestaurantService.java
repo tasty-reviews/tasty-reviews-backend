@@ -89,7 +89,8 @@ public class RestaurantService {
         return restaurantRepository.getRankingByReviewCount();
     }
 
-    public Optional<Restaurant> findByPlaceNameAndRoadAddressName(String placeName, String roadAddressName) {
-        return restaurantRepository.findByPlaceNameAndRoadAddressName(placeName, roadAddressName);
+    @Transactional(readOnly = true)
+    public Restaurant findByPlaceNameAndRoadAddressName(String placeName, String roadAddressName) {
+        return restaurantRepository.findByPlaceNameAndRoadAddressName(placeName, roadAddressName).orElse(null);
     }
 }
