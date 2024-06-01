@@ -88,4 +88,8 @@ public class RestaurantService {
     public List<Restaurant> getRankedRestaurantsByReviewCount() {
         return restaurantRepository.getRankingByReviewCount();
     }
+
+    public Optional<Restaurant> findByPlaceNameAndRoadAddressName(String placeName, String roadAddressName) {
+        return restaurantRepository.findByPlaceNameAndRoadAddressName(placeName, roadAddressName);
+    }
 }

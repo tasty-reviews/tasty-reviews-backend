@@ -1,5 +1,6 @@
 package com.tasty.reviews.tastyreviews.restaruant.service;
 
+import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,6 +13,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -34,7 +36,7 @@ public class KakaoSearchService {
                         .queryParam("category_group_code", categoryGroupCode)
                         .queryParam("query", keyword)
                         .queryParam("size", size)
-                        .queryParam("page", page) // 페이지 번호 추가
+                        .queryParam("page", page)
                         .encode(StandardCharsets.UTF_8)
                         .build()
                         .toUri();
@@ -51,7 +53,15 @@ public class KakaoSearchService {
                     JSONObject jsonResponse = new JSONObject(responseEntity.getBody());
                     JSONArray documents = jsonResponse.getJSONArray("documents");
                     for (int i = 0; i < documents.length(); i++) {
-                        combinedDocuments.put(documents.get(i)); // 개별 결과를 합침
+                        JSONObject document = documents.getJSONObject(i);
+                        String placeName = document.optString("place_name", "Unknown Name");
+                        String address = document.optString("address_name", "No Address Provided");
+
+                        Optional<Restaurant> restaurantOpt = restaurantService.findByPlaceNameAndRoadAddressName(placeName, address);
+                        int reviewCount = restaurantOpt.map(Restaurant::getReviewCount).orElse(0);
+
+                        document.put("reviewCount", reviewCount);
+                        combinedDocuments.put(document);
                     }
                     results.add(jsonResponse);
                 } else {
@@ -59,7 +69,6 @@ public class KakaoSearchService {
                 }
             }
 
-            // 전체 결과를 JSON 객체로 합침
             JSONObject combinedResult = new JSONObject();
             if (!results.isEmpty()) {
                 JSONObject meta = results.get(0).getJSONObject("meta");
