@@ -46,4 +46,4 @@ logging:
         SQL: DEBUG # Hibernate SQL 로그 레벨 설정
 
 file:
-  upload-dir: ./uploads
+  upload-dir: C:\pictures

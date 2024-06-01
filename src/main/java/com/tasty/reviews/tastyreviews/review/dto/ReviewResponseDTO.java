@@ -15,6 +15,7 @@ public class ReviewResponseDTO {
 
     private Long id;
     private Long memberId;
+    private String nickname;
     private String createdDate;
     private String modifiedDate;
     private Long restaurantId;
@@ -25,6 +26,7 @@ public class ReviewResponseDTO {
     public ReviewResponseDTO(Review review) {
             this.id = review.getId();
             this.memberId = review.getMember().getId();
+            this.nickname = review.getMember().getNickname();
             this.comment = review.getComment();
             this.createdDate = review.getCreatedDate();
             this.modifiedDate = review.getModifiedDate();
