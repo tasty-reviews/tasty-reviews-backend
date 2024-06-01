@@ -5,6 +5,7 @@ import com.tasty.reviews.tastyreviews.member.repository.MemberRepository;
 import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
 import com.tasty.reviews.tastyreviews.restaruant.repository.RestaurantRepository;
 import com.tasty.reviews.tastyreviews.review.domain.Review;
+import com.tasty.reviews.tastyreviews.review.dto.RestaurantReviewReadDTO;
 import com.tasty.reviews.tastyreviews.review.dto.ReviewResponseDTO;
 import com.tasty.reviews.tastyreviews.review.repository.ReviewRepository;
 import com.tasty.reviews.tastyreviews.upload.domain.UploadedFile;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,10 +45,27 @@ public class ReviewService {
     }
 
     // 특정 레스토랑의 리뷰 조회
-    public List<Review> getReviewsByRestaurantId(Long restaurantId) {
+    public List<RestaurantReviewReadDTO> getReviewsByRestaurantId(Long restaurantId) {
         List<Review> reviews = reviewRepository.findByRestaurantId(restaurantId);
-        reviews.forEach(review -> review.setImages(uploadedFileRepository.findByReviewId(review.getId())));
-        return reviews;
+//          reviews.forEach(review -> review.setImages(uploadedFileRepository.findByReviewId(review.getId())));
+
+        List<RestaurantReviewReadDTO> reviewReadDTOList = new ArrayList<>();
+
+        for (Review review : reviews) {
+            RestaurantReviewReadDTO reviewReadDTO = RestaurantReviewReadDTO.builder()
+                    .id(review.getId())
+                    .nickname(review.getMember().getNickname())
+                    .createdDate(review.getCreatedDate())
+                    .modifiedDate(review.getModifiedDate())
+                    .rating(review.getRating())
+                    .comment(review.getComment())
+                    .images(review.getImages())
+                    .build();
+
+            reviewReadDTOList.add(reviewReadDTO);
+
+        }
+        return reviewReadDTOList;
     }
 
     // 특정 회원의 리뷰 조회

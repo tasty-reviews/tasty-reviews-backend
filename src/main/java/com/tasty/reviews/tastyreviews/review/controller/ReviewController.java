@@ -1,6 +1,7 @@
 package com.tasty.reviews.tastyreviews.review.controller;
 
 import com.tasty.reviews.tastyreviews.review.domain.Review;
+import com.tasty.reviews.tastyreviews.review.dto.RestaurantReviewReadDTO;
 import com.tasty.reviews.tastyreviews.review.dto.ReviewResponseDTO;
 import com.tasty.reviews.tastyreviews.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ public class ReviewController {
 
     // 특정 레스토랑의 리뷰 조회
     @GetMapping("/restaurants/{restaurantId}")
-    public ResponseEntity<List<Review>> getReviewsByRestaurantId(@PathVariable(name = "restaurantId") Long restaurantId) {
-        List<Review> reviews = reviewService.getReviewsByRestaurantId(restaurantId);
+    public ResponseEntity<List<RestaurantReviewReadDTO>> getReviewsByRestaurantId(@PathVariable(name = "restaurantId") Long restaurantId) {
+        List<RestaurantReviewReadDTO> reviews = reviewService.getReviewsByRestaurantId(restaurantId);
         return ResponseEntity.ok(reviews);
     }
 
