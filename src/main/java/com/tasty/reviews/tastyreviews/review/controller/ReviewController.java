@@ -38,7 +38,7 @@ public class ReviewController {
     public ResponseEntity<ReviewResponseDTO> addReviewToRestaurant(@PathVariable(name = "restaurantId") Long restaurantId,
                                                                    @RequestParam("comment") String comment,
                                                                    @RequestParam("rating") int rating,
-                                                                   @RequestParam("files") List<MultipartFile> files) {
+                                                                   @RequestParam(required = false, name = "files") List<MultipartFile> files) {
         ReviewResponseDTO savedReview = reviewService.createReview(restaurantId, comment, rating, files);
         reviewService.restaurantAgvRatingUpdate(savedReview.getRestaurantId());//음식점 별점 반영
 
