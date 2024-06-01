@@ -1,6 +1,7 @@
 package com.tasty.reviews.tastyreviews.restaruant.service;
 
 import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
+import com.tasty.reviews.tastyreviews.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,7 +14,6 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -23,6 +23,7 @@ public class KakaoSearchService {
     private static final String API_KEY = "0f4d1cdf32e4a4f9150145f35c8adc60";
 
     private final RestaurantService restaurantService;
+    private final ReviewService reviewService; // ReviewService 추가
 
     public ResponseEntity<String> searchPlace(String categoryGroupCode, String keyword) {
         try {
@@ -36,7 +37,7 @@ public class KakaoSearchService {
                         .queryParam("category_group_code", categoryGroupCode)
                         .queryParam("query", keyword)
                         .queryParam("size", size)
-                        .queryParam("page", page)
+                        .queryParam("page", page) // 페이지 번호 추가
                         .encode(StandardCharsets.UTF_8)
                         .build()
                         .toUri();
@@ -54,13 +55,21 @@ public class KakaoSearchService {
                     JSONArray documents = jsonResponse.getJSONArray("documents");
                     for (int i = 0; i < documents.length(); i++) {
                         JSONObject document = documents.getJSONObject(i);
-                        String placeName = document.optString("place_name", "Unknown Name");
-                        String address = document.optString("address_name", "No Address Provided");
 
-                        Optional<Restaurant> restaurantOpt = restaurantService.findByPlaceNameAndRoadAddressName(placeName, address);
-                        int reviewCount = restaurantOpt.map(Restaurant::getReviewCount).orElse(0);
+                        // place_name과 road_address_name을 통해 음식점 엔티티를 찾음
+                        String placeName = document.getString("place_name");
+                        String roadAddressName = document.getString("address_name");
 
-                        document.put("reviewCount", reviewCount);
+                        Restaurant restaurant = restaurantService.findByPlaceNameAndRoadAddressName(placeName, roadAddressName);
+
+                        if (restaurant != null) {
+                            Double avgRating = reviewService.getAvgRatingByRestaurantId(restaurant.getId());
+                            int reviewCount = reviewService.getReviewCountByRestaurantId(restaurant.getId());
+
+                            document.put("avgRating", avgRating);
+                            document.put("reviewCount", reviewCount);
+                        }
+
                         combinedDocuments.put(document);
                     }
                     results.add(jsonResponse);
@@ -69,6 +78,7 @@ public class KakaoSearchService {
                 }
             }
 
+            // 전체 결과를 JSON 객체로 합침
             JSONObject combinedResult = new JSONObject();
             if (!results.isEmpty()) {
                 JSONObject meta = results.get(0).getJSONObject("meta");

@@ -159,7 +159,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public void restaurantAgvRatingUpdate(Long restaurantId) {
+    public void restaurantAvgRatingUpdate(Long restaurantId) {
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 음식점이 없습니다"));
@@ -175,5 +175,19 @@ public class ReviewService {
         }
 
         restaurant.updateRating(totalRating, reviewCount);
+    }
+
+    public Double getAvgRatingByRestaurantId(Long restaurantId) {
+        List<Review> reviews = reviewRepository.findByRestaurantId(restaurantId);
+        if (reviews.isEmpty()) {
+            return 0.0;
+        }
+        double total = reviews.stream().mapToDouble(Review::getRating).sum();
+        return Math.round((total / reviews.size()) * 100.0) / 100.0;
+    }
+
+
+    public int getReviewCountByRestaurantId(Long restaurantId) {
+        return reviewRepository.findByRestaurantId(restaurantId).size();
     }
 }
