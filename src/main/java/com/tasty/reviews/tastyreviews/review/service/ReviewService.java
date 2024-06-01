@@ -137,7 +137,7 @@ public class ReviewService {
         return new ReviewResponseDTO(reviewRepository.save(existingReview));
     }
 
-    //리뷰 삭제
+    // 리뷰 삭제
     @Transactional
     public void deleteReview(Long reviewId) {
         isLogined();
@@ -164,7 +164,7 @@ public class ReviewService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 음식점이 없습니다"));
 
-        //레스토랑에서 리뷰 가져오기
+        // 레스토랑에서 리뷰 가져오기
         List<Review> reviews = restaurant.getReviews();
 
         int totalRating = 0;
