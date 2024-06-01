@@ -1,11 +1,13 @@
 package com.tasty.reviews.tastyreviews.usermap.service;
 
 import com.tasty.reviews.tastyreviews.member.domain.Member;
+import com.tasty.reviews.tastyreviews.member.repository.MemberRepository;
 import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
+import com.tasty.reviews.tastyreviews.restaruant.repository.RestaurantRepository;
 import com.tasty.reviews.tastyreviews.upload.service.FileUploadService;
 import com.tasty.reviews.tastyreviews.usermap.domain.UserMap;
-import com.tasty.reviews.tastyreviews.member.repository.MemberRepository;
-import com.tasty.reviews.tastyreviews.restaruant.repository.RestaurantRepository;
+import com.tasty.reviews.tastyreviews.usermap.dto.AllUserMapResponseDTO;
+import com.tasty.reviews.tastyreviews.usermap.dto.UserMapResponseDTO;
 import com.tasty.reviews.tastyreviews.usermap.repository.UserMapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,7 +41,7 @@ public class UserMapService {
     }
 
     //사용자지도 추가
-    public UserMap createUserMap(UserMap userMap, MultipartFile file) throws IOException {
+    public UserMapResponseDTO createUserMap(UserMap userMap, MultipartFile file) throws IOException {
 
         Member member = getAuthenticatedMember();
 
@@ -48,7 +51,17 @@ public class UserMapService {
         }
 
         userMap.setMember(member);
-        return userMapRepository.save(userMap);
+        userMapRepository.save(userMap);
+
+        UserMapResponseDTO responseDTO = UserMapResponseDTO.builder()
+                .id(userMap.getId())
+                .name(userMap.getName())
+                .description(userMap.getDescription())
+                .myMapImage(userMap.getMyMapImage())
+                .nickname(member.getNickname())
+                .build();
+
+        return responseDTO;
     }
 
     //사용자지도 수정
@@ -107,6 +120,27 @@ public class UserMapService {
         return userMap;
     }
 
+    //모든 내 지도 조회
+    public List<AllUserMapResponseDTO> getAllUserMaps() {
+        List<UserMap> userMaps = userMapRepository.findAll();
+        List<AllUserMapResponseDTO> responseDTOList = new ArrayList<>();
+
+        //지도 작성한 회원 닉네임 가져와야 함!
+
+        for (UserMap userMap : userMaps) {
+            AllUserMapResponseDTO responseDTO = AllUserMapResponseDTO.builder()
+                    .id(userMap.getId())
+                    .name(userMap.getName())
+                    .myMapImage(userMap.getMyMapImage())
+                    .resturanstCount(userMap.getRestaurants().size())
+                    .nickname(userMap.getMember().getNickname())
+                    .build();
+
+            responseDTOList.add(responseDTO);
+        }
+
+        return responseDTOList;
+    }
     //특정 사용자가 작성한 사용지지도 리스트 조회
     public List<UserMap> getUserMapsByUserId(Long userId) {
         return userMapRepository.findByMemberId(userId);

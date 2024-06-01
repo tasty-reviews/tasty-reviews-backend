@@ -1,6 +1,8 @@
 package com.tasty.reviews.tastyreviews.usermap.controller;
 
 import com.tasty.reviews.tastyreviews.usermap.domain.UserMap;
+import com.tasty.reviews.tastyreviews.usermap.dto.AllUserMapResponseDTO;
+import com.tasty.reviews.tastyreviews.usermap.dto.UserMapResponseDTO;
 import com.tasty.reviews.tastyreviews.usermap.service.UserMapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,14 @@ import java.util.List;
 public class UserMapController {
 
     private final UserMapService userMapService;
+
+    //모든 회원의 지도 조회
+    @GetMapping("/")
+    public ResponseEntity<List<AllUserMapResponseDTO>> getAllUserMaps() {
+        List<AllUserMapResponseDTO> allUserMaps = userMapService.getAllUserMaps();
+
+        return ResponseEntity.ok(allUserMaps);
+    }
 
     //자신이 작성한 내지도 조회
     @GetMapping("/mymaps")
@@ -45,23 +55,23 @@ public class UserMapController {
 
     //내지도 추가
     @PostMapping("/usermaps/add")
-    public ResponseEntity<UserMap> addUserMap(@RequestParam("name") String name,
-                                              @RequestParam("description") String description,
-                                              @RequestParam("userMapImage") MultipartFile file) throws IOException {
+    public ResponseEntity<UserMapResponseDTO> addUserMap(@RequestParam("name") String name,
+                                                         @RequestParam("description") String description,
+                                                         @RequestParam("userMapImage") MultipartFile file) throws IOException {
         UserMap userMap = new UserMap();
         userMap.setName(name);
         userMap.setDescription(description);
 
-        UserMap createdUserMap = userMapService.createUserMap(userMap, file);
+        UserMapResponseDTO createdUserMap = userMapService.createUserMap(userMap, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUserMap);
     }
 
     //내지도 수정
     @PutMapping("usermaps/{userMapId}")
-    public ResponseEntity<UserMap>  updateUserMap(@PathVariable Long userMapId,
-                                                  @RequestParam("name") String name,
-                                                  @RequestParam("description") String description,
-                                                  @RequestParam("userMapImage") MultipartFile file) throws IOException {
+    public ResponseEntity<UserMap> updateUserMap(@PathVariable Long userMapId,
+                                                 @RequestParam("name") String name,
+                                                 @RequestParam("description") String description,
+                                                 @RequestParam("userMapImage") MultipartFile file) throws IOException {
         UserMap userMapDetails = new UserMap();
         userMapDetails.setName(name);
         userMapDetails.setDescription(description);
