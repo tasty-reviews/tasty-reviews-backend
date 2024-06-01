@@ -48,6 +48,6 @@ public class Review extends BaseTimeEntity {
 
     // Review 엔티티와 UploadedFile 엔티티 간의 양방향 관계를 맺기 위해 추가된 필드
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = false)
     private List<UploadedFile> images;
 }

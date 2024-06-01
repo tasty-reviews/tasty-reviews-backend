@@ -105,7 +105,7 @@ public class ReviewService {
 
     // 리뷰 수정 (이미지 포함)
     @Transactional
-    public ReviewResponseDTO updateReview(Long reviewId, String comment, int rating, List<MultipartFile> files) throws IOException {
+    public ReviewResponseDTO updateReview(Long reviewId, String comment, int rating, List<MultipartFile> files) {
         isLogined();
 
         Review existingReview = reviewRepository.findById(reviewId)
