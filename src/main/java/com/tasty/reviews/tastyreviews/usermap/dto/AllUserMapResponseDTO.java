@@ -14,14 +14,18 @@ public class AllUserMapResponseDTO {
     private String name;
     private String nickname;
     private String myMapImage;
+    private String description;
     private int resturanstCount;
+    private int viewCount;
 
     @Builder
-    public AllUserMapResponseDTO(Long id, String myMapImage, String nickname, int resturanstCount, String name) {
+    public AllUserMapResponseDTO(String description, Long id, String myMapImage, String name, String nickname, int resturanstCount, int viewCount) {
+        this.description = description;
         this.id = id;
         this.myMapImage = myMapImage;
+        this.name = name;
         this.nickname = nickname;
         this.resturanstCount = resturanstCount;
-        this.name = name;
+        this.viewCount = viewCount;
     }
 }
