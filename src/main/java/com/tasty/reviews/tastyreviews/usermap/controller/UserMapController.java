@@ -1,7 +1,6 @@
 package com.tasty.reviews.tastyreviews.usermap.controller;
 
 import com.tasty.reviews.tastyreviews.usermap.domain.UserMap;
-import com.tasty.reviews.tastyreviews.usermap.dto.AllUserMapResponseDTO;
 import com.tasty.reviews.tastyreviews.usermap.dto.UserMapResponseDTO;
 import com.tasty.reviews.tastyreviews.usermap.service.UserMapService;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +17,6 @@ import java.util.List;
 public class UserMapController {
 
     private final UserMapService userMapService;
-
-    //모든 회원의 지도 조회
-    @GetMapping("/")
-    public ResponseEntity<List<AllUserMapResponseDTO>> getAllUserMaps() {
-        List<AllUserMapResponseDTO> allUserMaps = userMapService.getAllUserMaps();
-
-        return ResponseEntity.ok(allUserMaps);
-    }
 
     //자신이 작성한 내지도 조회
     @GetMapping("/mymaps")
