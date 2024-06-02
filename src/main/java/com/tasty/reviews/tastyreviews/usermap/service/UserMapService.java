@@ -53,15 +53,15 @@ public class UserMapService {
         userMap.setMember(member);
         userMapRepository.save(userMap);
 
-        UserMapResponseDTO responseDTO = UserMapResponseDTO.builder()
+        return UserMapResponseDTO.builder()
                 .id(userMap.getId())
                 .name(userMap.getName())
                 .description(userMap.getDescription())
                 .myMapImage(userMap.getMyMapImage())
                 .nickname(member.getNickname())
+                .viewCount(userMap.getViewCount())
                 .build();
 
-        return responseDTO;
     }
 
     //사용자지도 수정
@@ -106,16 +106,34 @@ public class UserMapService {
 
     //사용자가 작성한 사용자지도 리스트 조회
     @Transactional(readOnly = true)
-    public List<UserMap> getUserMapByEmail() {
+    public List<UserMapResponseDTO> getUserMapByEmail() {
         Member member = getAuthenticatedMember();
 
-        return userMapRepository.findByMemberEmail(member.getEmail());
+        List<UserMapResponseDTO> userMapResponseList = new ArrayList<>();
+
+        List<UserMap> UserMap = userMapRepository.findByMemberEmail(member.getEmail());
+
+        for (UserMap userMaps : UserMap) {
+            UserMapResponseDTO userMapResponseDTO = UserMapResponseDTO.builder()
+                    .id(userMaps.getId())
+                    .name(userMaps.getName())
+                    .description(userMaps.getDescription())
+                    .myMapImage(userMaps.getMyMapImage())
+                    .nickname(userMaps.getMember().getNickname())
+                    .viewCount(userMaps.getViewCount() + 1)
+                    .build();
+
+            userMapResponseList.add(userMapResponseDTO);
+        }
+        return userMapResponseList;
     }
 
     //리스트에 저장된 음식점 조회
     public UserMap getRestaurantsByUserMapId(Long usermapId) {
         UserMap userMap = userMapRepository.findById(usermapId)
                 .orElseThrow(() -> new IllegalArgumentException("UserMap not found with id: " + usermapId));
+
+        userMap.setViewCount(userMap.getViewCount() + 1);
 
         return userMap;
     }
@@ -125,8 +143,6 @@ public class UserMapService {
         List<UserMap> userMaps = userMapRepository.findAll();
         List<AllUserMapResponseDTO> responseDTOList = new ArrayList<>();
 
-        //지도 작성한 회원 닉네임 가져와야 함!
-
         for (UserMap userMap : userMaps) {
             AllUserMapResponseDTO responseDTO = AllUserMapResponseDTO.builder()
                     .id(userMap.getId())
@@ -134,6 +150,7 @@ public class UserMapService {
                     .myMapImage(userMap.getMyMapImage())
                     .resturanstCount(userMap.getRestaurants().size())
                     .nickname(userMap.getMember().getNickname())
+                    .viewCount(userMap.getViewCount())
                     .build();
 
             responseDTOList.add(responseDTO);
@@ -141,9 +158,36 @@ public class UserMapService {
 
         return responseDTOList;
     }
+
     //특정 사용자가 작성한 사용지지도 리스트 조회
     public List<UserMap> getUserMapsByUserId(Long userId) {
         return userMapRepository.findByMemberId(userId);
+    }
+
+    //내지도 랭킹
+    @Transactional(readOnly = true)
+    public List<AllUserMapResponseDTO> getRankedUserMapByUserMapCount() {
+
+        List<UserMap> rankingByViewCount = userMapRepository.getRankingByViewCount();
+
+        List<AllUserMapResponseDTO> responseDTOList = new ArrayList<>();
+
+        for (UserMap userMap : rankingByViewCount) {
+
+            AllUserMapResponseDTO responseDTO = AllUserMapResponseDTO.builder()
+                    .id(userMap.getId())
+                    .name(userMap.getName())
+                    .nickname(userMap.getMember().getNickname())
+                    .myMapImage(userMap.getMyMapImage())
+                    .description(userMap.getDescription())
+                    .resturanstCount(userMap.getRestaurants().size())
+                    .viewCount(userMap.getViewCount())
+                    .build();
+
+            responseDTOList.add(responseDTO);
+
+        }
+        return responseDTOList;
     }
 }
 

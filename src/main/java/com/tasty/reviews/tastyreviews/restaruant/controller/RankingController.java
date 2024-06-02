@@ -1,8 +1,9 @@
 package com.tasty.reviews.tastyreviews.restaruant.controller;
 
-
 import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
 import com.tasty.reviews.tastyreviews.restaruant.service.RestaurantService;
+import com.tasty.reviews.tastyreviews.usermap.dto.AllUserMapResponseDTO;
+import com.tasty.reviews.tastyreviews.usermap.service.UserMapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,16 +20,25 @@ import java.util.List;
 public class RankingController {
 
     private final RestaurantService restaurantService;
+    private final UserMapService userMapService;
 
     @GetMapping
-    public ResponseEntity<List<Restaurant>> getRankings(@RequestParam("type") String type) {
-        List<Restaurant> rankings;
+    public ResponseEntity<List<?>> getRankings(@RequestParam("type") String type) {
         switch (type) {
-            case "VIEW_COUNT" -> rankings = restaurantService.getRankedRestaurantsByViewCount();
-            case "REVIEW_COUNT" -> rankings = restaurantService.getRankedRestaurantsByReviewCount();
-            default -> rankings = new ArrayList<>(); // 디폴트 케이스에서 초기화
-        }
+            case "VIEW_COUNT":
+                List<Restaurant> viewCountRankings = restaurantService.getRankedRestaurantsByViewCount();
+                return ResponseEntity.ok(viewCountRankings);
 
-        return ResponseEntity.ok(rankings);
+            case "REVIEW_COUNT":
+                List<Restaurant> reviewCountRankings = restaurantService.getRankedRestaurantsByReviewCount();
+                return ResponseEntity.ok(reviewCountRankings);
+
+            case "USERMAP_COUNT":
+                List<AllUserMapResponseDTO> userMapRankings = userMapService.getRankedUserMapByUserMapCount();
+                return ResponseEntity.ok(userMapRankings);
+
+            default:
+                return ResponseEntity.badRequest().body(new ArrayList<>());
+        }
     }
 }

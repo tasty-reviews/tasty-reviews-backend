@@ -32,6 +32,8 @@ public class UserMap {
 
     private String myMapImage;
 
+    private int viewCount;
+
     @ManyToMany
     @JoinTable(
             name = "usermap_restaurant", // 연결 테이블 이름
