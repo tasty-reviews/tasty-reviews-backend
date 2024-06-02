@@ -5,12 +5,20 @@ import com.tasty.reviews.tastyreviews.review.dto.RestaurantReviewReadDTO;
 import com.tasty.reviews.tastyreviews.review.dto.ReviewResponseDTO;
 import com.tasty.reviews.tastyreviews.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -19,6 +27,7 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final Path fileStorageLocation = Paths.get("uploads").toAbsolutePath().normalize();
 
     // 특정 레스토랑의 리뷰 조회
     @GetMapping("/restaurants/{restaurantId}")
@@ -49,9 +58,9 @@ public class ReviewController {
     // 리뷰 수정
     @PutMapping("/reviews/{reviewId}")
     public ResponseEntity<ReviewResponseDTO> updateReview(@PathVariable Long reviewId,
-                                               @RequestParam("comment") String comment,
-                                               @RequestParam("rating") int rating,
-                                               @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
+                                                          @RequestParam("comment") String comment,
+                                                          @RequestParam("rating") int rating,
+                                                          @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
         ReviewResponseDTO updatedReview = reviewService.updateReview(reviewId, comment, rating, files);
         return ResponseEntity.ok(updatedReview);
     }
@@ -63,4 +72,28 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
     }
 
+    // 파일 제공 엔드포인트
+    @GetMapping("/reviews/image/{fileName:.+}")
+    public ResponseEntity<Resource> getFile(@PathVariable String fileName) {
+        try {
+            Path filePath = fileStorageLocation.resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()) {
+                String contentType = Files.probeContentType(filePath);
+                if (contentType == null) {
+                    contentType = "application/octet-stream";
+                }
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (IOException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

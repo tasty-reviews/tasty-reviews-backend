@@ -93,7 +93,7 @@ public class SecurityConfig {
                         .permitAll()
 
                         .requestMatchers("/mypage/**").hasRole("USER")
-                        .requestMatchers("/api/image/**")
+                        .requestMatchers("/api/reviews/image/**")
                         .permitAll() // 이미지에 대한 요청은 모든 사용자에게 허용
 
                         .anyRequest().authenticated()
