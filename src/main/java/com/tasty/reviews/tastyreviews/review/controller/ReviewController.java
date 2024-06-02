@@ -1,5 +1,6 @@
 package com.tasty.reviews.tastyreviews.review.controller;
 
+import com.tasty.reviews.tastyreviews.review.dto.MemerReviewReadResponseDTO;
 import com.tasty.reviews.tastyreviews.review.dto.RestaurantReviewReadDTO;
 import com.tasty.reviews.tastyreviews.review.dto.ReviewResponseDTO;
 import com.tasty.reviews.tastyreviews.review.service.ReviewService;
@@ -28,8 +29,8 @@ public class ReviewController {
 
     // 특정 회원의 리뷰 조회
     @GetMapping("/members/reviews")
-    public ResponseEntity<List<ReviewResponseDTO>> getReviewsByMemberId() {
-        List<ReviewResponseDTO> reviews = reviewService.getReviewsByMemberId();
+    public ResponseEntity<List<MemerReviewReadResponseDTO>> getReviewsByMemberId() {
+        List<MemerReviewReadResponseDTO> reviews = reviewService.getReviewsByMemberId();
         return ResponseEntity.ok(reviews);
     }
 

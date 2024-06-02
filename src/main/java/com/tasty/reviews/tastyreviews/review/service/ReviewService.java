@@ -5,6 +5,7 @@ import com.tasty.reviews.tastyreviews.member.repository.MemberRepository;
 import com.tasty.reviews.tastyreviews.restaruant.domain.Restaurant;
 import com.tasty.reviews.tastyreviews.restaruant.repository.RestaurantRepository;
 import com.tasty.reviews.tastyreviews.review.domain.Review;
+import com.tasty.reviews.tastyreviews.review.dto.MemerReviewReadResponseDTO;
 import com.tasty.reviews.tastyreviews.review.dto.RestaurantReviewReadDTO;
 import com.tasty.reviews.tastyreviews.review.dto.ReviewResponseDTO;
 import com.tasty.reviews.tastyreviews.review.repository.ReviewRepository;
@@ -69,7 +70,7 @@ public class ReviewService {
     }
 
     // 특정 회원의 리뷰 조회
-    public List<ReviewResponseDTO> getReviewsByMemberId() {
+    public List<MemerReviewReadResponseDTO> getReviewsByMemberId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalStateException("User must be logged in to access reviews");
@@ -80,17 +81,18 @@ public class ReviewService {
                 .orElseThrow(() -> new IllegalStateException("User not found"));
         List<Review> reviews = reviewRepository.findByMemberId(member.getId());
 
-        List<ReviewResponseDTO> responseList = new ArrayList<>();
+        List<MemerReviewReadResponseDTO> responseList = new ArrayList<>();
 
         for (Review review : reviews) {
 
-            ReviewResponseDTO responseDTO = ReviewResponseDTO.builder()
+            MemerReviewReadResponseDTO responseDTO = MemerReviewReadResponseDTO.builder()
                     .id(review.getId())
                     .memberId(review.getMember().getId())
                     .nickname(review.getMember().getNickname())
                     .createdDate(review.getCreatedDate())
                     .modifiedDate(review.getModifiedDate())
-                    .restaurantId(review.getRestaurant().getId())
+                    .placeId(review.getRestaurant().getPlaceId())
+                    .placeName(review.getRestaurant().getPlaceName())
                     .rating(review.getRating())
                     .comment(review.getComment())
                     .images(review.getImages())
