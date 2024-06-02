@@ -69,7 +69,7 @@ public class ReviewService {
     }
 
     // 특정 회원의 리뷰 조회
-    public List<Review> getReviewsByMemberId() {
+    public List<ReviewResponseDTO> getReviewsByMemberId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalStateException("User must be logged in to access reviews");
@@ -79,8 +79,27 @@ public class ReviewService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("User not found"));
         List<Review> reviews = reviewRepository.findByMemberId(member.getId());
-        reviews.forEach(review -> review.setImages(uploadedFileRepository.findByReviewId(review.getId())));
-        return reviews;
+
+        List<ReviewResponseDTO> responseList = new ArrayList<>();
+
+        for (Review review : reviews) {
+
+            ReviewResponseDTO responseDTO = ReviewResponseDTO.builder()
+                    .id(review.getId())
+                    .memberId(review.getMember().getId())
+                    .nickname(review.getMember().getNickname())
+                    .createdDate(review.getCreatedDate())
+                    .modifiedDate(review.getModifiedDate())
+                    .restaurantId(review.getRestaurant().getId())
+                    .rating(review.getRating())
+                    .comment(review.getComment())
+                    .images(review.getImages())
+                    .build();
+
+            responseList.add(responseDTO);
+
+        }
+        return responseList;
     }
 
     // 리뷰 생성
