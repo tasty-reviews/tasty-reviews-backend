@@ -1,49 +1,48 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/reviews_db
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: ${DATABASE_URL} # H2 데이터베이스 URL 설정
+    username: sa # 데이터베이스 사용자명
+    password: # 데이터베이스 비밀번호 (비어 있음)
+    driver-class-name: org.h2.Driver # H2 데이터베이스 드라이버 클래스 이름
   jwt:
-    secret: dljfjaldkfjaksldfjaldkfjlkadsfjakslfjafejfopajdiofjaiodfdlksfjakldfjakldsf
+    secret: ${JWT_SECRET} # JWT 토큰 서명을 위한 비밀 키
   config:
-    import: classpath:application-mail.yml
+    import: classpath:application-mail.yml # 추가 설정 파일 가져오기
   servlet:
     multipart:
-      max-file-size: 2MB
-      max-request-size: 2MB
-
+      max-file-size: 2MB # 업로드할 파일의 최대 크기 설정
+      max-request-size: 2MB # 전체 요청의 최대 크기 설정
 
   h2:
     console:
-      enabled: true
+      enabled: true # H2 데이터베이스 콘솔 활성화
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update # 데이터베이스 스키마를 애플리케이션 실행 시 자동으로 업데이트
     properties:
       hibernate:
-        show_sql: true
-        format_sql: true
+        show_sql: true # 실행되는 SQL 쿼리를 출력
+        format_sql: true # 출력되는 SQL 쿼리를 보기 좋게 포맷팅
+
 server:
   servlet:
     session:
       cookie:
-        http-only: false
+        http-only: false # HTTP-only 쿠키 설정 (보안 관련 설정으로 자바스크립트에서 접근 불가하게 함)
 
 naver:
   client:
-    id: z5_1N93ZPYttDAeegf1v
-    secret: Y7N1zcMl1N
+    id: ${NAVER_CLIENT} # 네이버 클라이언트 ID (네이버 API 사용을 위한 인증 정보)
+    secret: ${NAVER_SECRET} # 네이버 클라이언트 시크릿 (네이버 API 사용을 위한 인증 정보)
 
 logging:
   level:
-    root: INFO # 전체 로그 레벨 설정
+    root: INFO # 기본 로깅 레벨 설정
     org:
       springframework:
-        security: DEBUG # Spring Security 로그 레벨 설정
-
+        security: DEBUG # Spring Security에 대한 로깅 레벨 설정
       hibernate:
-        SQL: DEBUG # Hibernate SQL 로그 레벨 설정
+        SQL: DEBUG # Hibernate SQL에 대한 로깅 레벨 설정
 
 file:
-  upload-dir: ./uploads
+  upload-dir: ./uploads # 파일 업로드 디렉토리 설정

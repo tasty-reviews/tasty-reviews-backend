@@ -1,56 +1,52 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.2.4'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'java' // 자바 플러그인을 적용하여 자바 프로젝트를 구성
+    id 'org.springframework.boot' version '3.2.4' // 스프링 부트 플러그인을 적용하여 스프링 부트 애플리케이션을 구성
+    id 'io.spring.dependency-management' version '1.1.4' // 스프링의 의존성 관리를 적용하여 의존성 버전을 자동으로 관리
 }
 
-group = 'com.tasty.reviews'
-version = '0.0.1-SNAPSHOT'
+group = 'com.tasty.reviews' // 프로젝트 그룹 ID를 설정
+version = '0.0.1-SNAPSHOT' // 프로젝트 버전을 설정
 
 java {
-    sourceCompatibility = '17'
+    sourceCompatibility = '17' // 자바 17 버전을 사용하도록 설정
 }
 
 configurations {
     compileOnly {
-        extendsFrom annotationProcessor
+        extendsFrom annotationProcessor // annotationProcessor 설정을 상속하여 컴파일 전용 의존성을 설정
     }
 }
 
 repositories {
-    mavenCentral()
+    mavenCentral() // 의존성을 가져올 리포지토리로 Maven Central을 설정
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    //implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.modelmapper:modelmapper:3.1.0'
-    implementation 'org.json:json:20210307'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA를 사용하기 위한 스프링 부트 스타터 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-security' // 스프링 시큐리티를 사용하기 위한 스프링 부트 스타터 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-validation' // 유효성 검증을 위한 스프링 부트 스타터 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-web' // 스프링 웹 MVC를 사용하기 위한 스프링 부트 스타터 의존성
+    implementation 'org.modelmapper:modelmapper:3.1.0' // 객체 간 매핑을 위한 ModelMapper 의존성
+    implementation 'org.json:json:20210307' // JSON 처리를 위한 JSON 의존성
 
-
-    //jwt
+    // JWT 관련 의존성
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
-    testImplementation 'io.projectreactor:reactor-test'
 
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.h2database:h2'
-//	runtimeOnly 'com.mysql:mysql-connector-j'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux' // 웹 플럭스를 사용하기 위한 스프링 부트 스타터 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-mail' // 메일 전송을 위한 스프링 부트 스타터 의존성
+    testImplementation 'io.projectreactor:reactor-test' // 리액터 테스트를 위한 의존성
+
+    compileOnly 'org.projectlombok:lombok' // 럼복을 컴파일 전용으로 사용하여 코드를 간결하게 작성
+    runtimeOnly 'com.h2database:h2' // H2 데이터베이스를 실행할 수 있는 런타임 의존성
+    annotationProcessor 'org.projectlombok:lombok' // 롬복 애너테이션 프로세서 설정
+    testImplementation 'org.springframework.boot:spring-boot-starter-test' // 스프링 부트 테스트 스타터 의존성
+    testImplementation 'org.springframework.security:spring-security-test' // 스프링 시큐리티 테스트를 위한 의존성
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+    useJUnitPlatform() // JUnit 플랫폼을 사용하여 테스트를 실행하도록 설정
 }
 
-compileJava.options.compilerArgs += "-parameters"
-
+compileJava.options.compilerArgs += "-parameters" // 컴파일 옵션에 파라미터 설정 추가
