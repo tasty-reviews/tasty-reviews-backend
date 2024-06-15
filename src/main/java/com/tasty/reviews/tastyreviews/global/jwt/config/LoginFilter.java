@@ -29,34 +29,27 @@ import java.util.*;
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final AuthenticationManager authenticationManager;
-    private final JWTUtil jwtUtil;
-    private final RefreshRepository refreshRepository;
-    private final MemberRepository memberRepository;
+    private final AuthenticationManager authenticationManager; // 인증 처리 매니저
+    private final JWTUtil jwtUtil; // JWT 토큰 생성 및 검증 유틸리티
+    private final RefreshRepository refreshRepository; // 리프레시 토큰 저장소
+    private final MemberRepository memberRepository; // 사용자 정보 저장소
 
     // 사용자가 로그인을 시도할 때 호출되는 메서드
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
         LoginDTO loginDTO;
-
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = new ObjectMapper(); // JSON 파싱을 위한 ObjectMapper
             ServletInputStream inputStream = request.getInputStream();
-            String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-            loginDTO = objectMapper.readValue(messageBody, LoginDTO.class);
-
+            String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8); // 요청 본문을 문자열로 변환
+            loginDTO = objectMapper.readValue(messageBody, LoginDTO.class); // 요청 본문을 LoginDTO로 변환
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         String username = loginDTO.getEmail();
         String password = loginDTO.getPassword();
-
-
         // 스프링 시큐리티에서 username과 password를 검증하기 위한 UsernamePasswordAuthenticationToken 생성
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
-
         // 검증을 위한 AuthenticationManager로 토큰 전달
         return authenticationManager.authenticate(authToken);
     }
@@ -64,82 +57,68 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     // 로그인 성공 시 실행되는 메서드
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
-        //유저 정보
-        String username = authentication.getName();
-
+        String username = authentication.getName(); // 유저 정보
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
-
-        //토큰 생성
-        String access = jwtUtil.createJwt("access", username, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
-
-        //서버에 리프레시 토큰 저장
+        // 토큰 생성
+        String access = jwtUtil.createJwt("access", username, role, 600000L); // 엑세스 토큰 생성
+        String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L); // 리프레시 토큰 생성
+        // 서버에 리프레시 토큰 저장
         addRefreshEntity(username, refresh, 86400000L);
-
         ObjectMapper mapper = new ObjectMapper();
-        String nickname = findNickname(username); //DB에서 닉네임 가져오기
+        String nickname = findNickname(username); // DB에서 닉네임 가져오기
         Long id = findId(username);
-
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("email", username);
         responseData.put("role", role);
         responseData.put("nickname", nickname);
         responseData.put("id", id);
-
-        response.setHeader("Authorization", access); // Authorization 헤더에 access 토큰 저장
-        response.addCookie(createCookie("refresh", refresh)); // 쿠키에 refresh 토큰 저장
-        response.setContentType("application/json;charset=UTF-8"); //JSON응답/한글 인코딩
+        response.setHeader("Authorization", access); // Authorization 헤더에 엑세스 토큰 저장
+        response.addCookie(createCookie("refresh", refresh)); // 쿠키에 리프레시 토큰 저장
+        response.setContentType("application/json;charset=UTF-8"); // JSON 응답/한글 인코딩
         response.setStatus(HttpStatus.OK.value()); // 상태코드 설정
-        mapper.writeValue(response.getWriter(), responseData); //응답 본문
-
+        mapper.writeValue(response.getWriter(), responseData); // 응답 본문
     }
 
     // 로그인 실패 시 실행되는 메서드
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-        //로그인 실패시 401 응답 코드 반환
-        response.setStatus(401);
+        response.setStatus(401); // 로그인 실패 시 401 응답 코드 반환
     }
 
-    //쿠키 생성 메서드
+    // 쿠키 생성 메서드
     private Cookie createCookie(String key, String value) {
-
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24 * 60 * 60);
-        //cookie.setSecure(true);
-        //cookie.setPath("/");
-        cookie.setHttpOnly(false);
-
+        cookie.setMaxAge(24 * 60 * 60); // 쿠키 유효 기간 설정
+        // cookie.setSecure(true);
+        // cookie.setPath("/");
+        cookie.setHttpOnly(false); // 쿠키 HttpOnly 속성 설정
         return cookie;
     }
 
-    private void addRefreshEntity(String userEmail, String refresh, Long expiredMs) { //이메일, 리프레시토큰, 만료일자
-
-        Date date = new Date(System.currentTimeMillis() + expiredMs);
-
+    // 리프레시 토큰을 데이터베이스에 저장하는 메서드
+    private void addRefreshEntity(String userEmail, String refresh, Long expiredMs) {
+        Date date = new Date(System.currentTimeMillis() + expiredMs); // 만료 날짜 계산
         RefreshEntity refreshEntity = new RefreshEntity();
         refreshEntity.setUserEmail(userEmail);
         refreshEntity.setRefresh(refresh);
         refreshEntity.setExpiration(date.toString());
-
-        refreshRepository.save(refreshEntity);
+        refreshRepository.save(refreshEntity); // 리프레시 토큰 저장
     }
 
+    // 이메일로 사용자 닉네임 조회
     private String findNickname(String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 이메일이 없습니다"));
-
         return member.getNickname();
     }
 
+    // 이메일로 사용자 ID 조회
     private Long findId(String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 이메일이 없습니다"));
-
         return member.getId();
-
     }
 }

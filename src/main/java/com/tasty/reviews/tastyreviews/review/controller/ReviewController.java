@@ -72,28 +72,39 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
     }
 
-    // 파일 제공 엔드포인트
+    // 파일 제공 엔드포인트를 정의
     @GetMapping("/reviews/image/{fileName:.+}")
     public ResponseEntity<Resource> getFile(@PathVariable String fileName) {
         try {
+            // 파일 이름을 기준으로 파일의 경로를 해결하고 표준화
             Path filePath = fileStorageLocation.resolve(fileName).normalize();
+            // 파일 경로를 URL 자원으로 변환
             Resource resource = new UrlResource(filePath.toUri());
+
+            // 자원이 존재하는지 확인
             if (resource.exists()) {
+                // 파일의 콘텐츠 타입을 추론
                 String contentType = Files.probeContentType(filePath);
+                // 콘텐츠 타입이 null인 경우 기본 타입 설정
                 if (contentType == null) {
                     contentType = "application/octet-stream";
                 }
+                // HTTP 응답을 생성하여 자원 반환
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(contentType))
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                         .body(resource);
             } else {
+                // 파일이 존재하지 않으면 404 Not Found 응답
                 return ResponseEntity.notFound().build();
             }
         } catch (MalformedURLException ex) {
+            // URL이 잘못된 경우 500 Internal Server Error 응답
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         } catch (IOException ex) {
+            // 입출력 예외가 발생한 경우 500 Internal Server Error 응답
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 }
