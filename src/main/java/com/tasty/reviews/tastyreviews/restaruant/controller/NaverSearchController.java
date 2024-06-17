@@ -25,7 +25,12 @@ public class NaverSearchController {
     @Value("${naver.client.secret}")
     private String clientSecret;
 
-    // GET 요청을 처리하는 메서드, '/search/image' 엔드포인트를 매핑함
+    /**
+     * 네이버 이미지 검색 API를 호출하여 이미지를 검색하는 메서드입니다.
+     *
+     * @param query 검색할 이미지의 쿼리 문자열
+     * @return ResponseEntity<?> 검색된 이미지 정보를 ResponseEntity로 반환
+     */
     @GetMapping("/search/image")
     public ResponseEntity<?> searchNaverImage(@RequestParam String query) {
         // Naver 이미지 검색 API의 URL

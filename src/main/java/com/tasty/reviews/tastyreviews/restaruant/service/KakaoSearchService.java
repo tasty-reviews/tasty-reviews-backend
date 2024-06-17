@@ -15,6 +15,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 카카오 로컬 API를 이용한 음식점 검색 서비스
+ */
 @RequiredArgsConstructor
 @Service
 public class KakaoSearchService {
@@ -25,8 +28,15 @@ public class KakaoSearchService {
 
     // 의존성 주입: RestaurantService와 ReviewService
     private final RestaurantService restaurantService;
-    private final ReviewService reviewService; // ReviewService 추가
+    private final ReviewService reviewService;
 
+    /**
+     * 카카오 API를 이용하여 음식점을 검색하는 메서드
+     *
+     * @param categoryGroupCode 카테고리 그룹 코드
+     * @param keyword           검색 키워드
+     * @return ResponseEntity<String> 응답 객체
+     */
     public ResponseEntity<String> searchPlace(String categoryGroupCode, String keyword) {
         try {
             int size = 15; // 요청할 결과의 수

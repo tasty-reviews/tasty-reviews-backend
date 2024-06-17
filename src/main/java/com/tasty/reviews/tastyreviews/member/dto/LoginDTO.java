@@ -8,9 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 public class LoginDTO {
 
-    //이메일, 비밀번호만 받음
-    private String email;
-    private String password;
-
+    private String email; // 사용자 이메일
+    private String password; // 사용자 비밀번호
 
 }

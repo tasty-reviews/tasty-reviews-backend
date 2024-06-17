@@ -11,10 +11,10 @@ import java.util.List;
 @Setter
 public class MemberResponseDTO {
 
-    private Long id;
-    private String nickname;
-    private String email;
-    private List<Review> reviewList;
+    private Long id; // 회원 ID
+    private String nickname; // 회원 닉네임
+    private String email; // 회원 이메일
+    private List<Review> reviewList; // 회원이 작성한 리뷰 목록
 
     @Builder
     public MemberResponseDTO(Long id, String email, String nickname, List<Review> reviewList) {
