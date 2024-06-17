@@ -15,6 +15,9 @@ import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+/**
+ * 리뷰 정보를 나타내는 엔티티 클래스
+ */
 @Entity
 @Getter
 @Setter
@@ -23,30 +26,48 @@ import static jakarta.persistence.FetchType.LAZY;
 @Builder
 public class Review extends BaseTimeEntity {
 
+    /**
+     * 리뷰 식별자
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Review_id")
     private Long id;
 
+    /**
+     * 리뷰를 작성한 회원 정보
+     */
     @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "Member_id", nullable = false)
     private Member member;
 
+    /**
+     * 리뷰가 작성된 레스토랑 정보
+     */
     @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "Restaurant_id", nullable = false)
     private Restaurant restaurant;
 
+    /**
+     * 리뷰 평점 (1부터 5까지의 범위)
+     */
     @Column(name = "Rating", nullable = false)
     @Min(1)
     @Max(5)
     private int rating;
 
+    /**
+     * 리뷰 내용
+     */
     @Column(nullable = false)
     private String comment;
 
-    // Review 엔티티와 UploadedFile 엔티티 간의 양방향 관계를 맺기 위해 추가된 필드
+    /**
+     * 리뷰에 첨부된 이미지 파일 리스트
+     * 양방향 연관 관계 설정: Review 엔티티에서 UploadedFile 엔티티와의 일대다 관계
+     */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = false)
     private List<UploadedFile> images;

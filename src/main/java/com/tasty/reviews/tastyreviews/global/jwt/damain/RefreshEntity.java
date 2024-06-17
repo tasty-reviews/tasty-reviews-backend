@@ -7,17 +7,17 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+@Entity // JPA 엔터티임을 나타냄
 @Getter
 @Setter
-public class RefreshEntity { //refresh 토큰을 서버에 저장하는 엔티티
+public class RefreshEntity { // 리프레시 토큰을 서버에 저장하는 엔티티
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // 엔터티의 고유 식별자
 
-    private String userEmail;
-    private String refresh;
-    private String expiration;
+    private String userEmail; // 사용자 이메일
+    private String refresh; // 리프레시 토큰 값
+    private String expiration; // 토큰 만료 일자
 
 }

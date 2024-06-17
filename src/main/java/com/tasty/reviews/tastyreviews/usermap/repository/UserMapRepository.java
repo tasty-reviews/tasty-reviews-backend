@@ -9,12 +9,14 @@ import java.util.List;
 
 @Repository
 public interface UserMapRepository extends JpaRepository<UserMap, Long> {
+
+    // 이메일을 기반으로 회원의 내지도 조회
     List<UserMap> findByMemberEmail(String email);
 
-    List<UserMap> findByMemberId(Long membberId);
+    // 회원 ID를 기반으로 회원의 내지도 조회
+    List<UserMap> findByMemberId(Long memberId);
 
-    //내지도 정렬
-    @Query("SELECT r FROM UserMap r ORDER BY r.viewCount DESC")
+    // 조회수(viewCount) 기준으로 내지도 정렬하여 조회
+    @Query("SELECT um FROM UserMap um ORDER BY um.viewCount DESC")
     List<UserMap> getRankingByViewCount();
-
 }

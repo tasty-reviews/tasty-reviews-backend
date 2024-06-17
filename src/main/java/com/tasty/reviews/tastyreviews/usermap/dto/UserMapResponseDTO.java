@@ -10,13 +10,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserMapResponseDTO {
 
-    private Long id;
-    private String name;
-    private String description;
-    private String myMapImage;
-    private String nickname;
-    private int viewCount;
-
+    private Long id; // 내지도 ID
+    private String name; // 내지도 이름
+    private String description; // 내지도 설명
+    private String myMapImage; // 내지도 이미지 파일 경로
+    private String nickname; // 회원 닉네임
+    private int viewCount; // 조회 횟수
 
     @Builder
     public UserMapResponseDTO(String description, Long id, String myMapImage, String name, String nickname, int viewCount) {

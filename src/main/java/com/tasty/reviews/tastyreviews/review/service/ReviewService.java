@@ -120,6 +120,7 @@ public class ReviewService {
         restaurant.setReviewCount(restaurant.getReviewCount() + 1);
         Review savedReview = reviewRepository.save(review);
 
+
         if (files != null && !files.isEmpty()) {
             List<UploadedFile> uploadedFiles = files.stream()
                     .filter(file -> !file.isEmpty()) // 비어있는 파일은 필터링

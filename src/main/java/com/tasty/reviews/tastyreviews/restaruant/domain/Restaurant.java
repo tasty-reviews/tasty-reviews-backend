@@ -52,6 +52,7 @@ public class Restaurant extends BaseTimeEntity {
     private String phone;
 
     private String imageUrl;
+
     private String placeUrl;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
@@ -61,24 +62,37 @@ public class Restaurant extends BaseTimeEntity {
     @ManyToMany(mappedBy = "restaurants")
     private List<UserMap> userMaps = new ArrayList<>();
 
+    /**
+     * 리뷰를 추가하고, 해당 리뷰의 음식점을 현재 음식점으로 설정합니다.
+     *
+     * @param review 추가할 리뷰
+     */
     public void addReview(Review review) {
         reviews.add(review);
-        review.setRestaurant(this);
+        review.setRestaurant(this); // Review 엔티티의 restaurant 필드 설정
     }
 
+    /**
+     * 음식점의 리뷰 목록을 설정하고, 각 리뷰의 음식점을 현재 음식점으로 설정합니다.
+     *
+     * @param reviews 설정할 리뷰 목록
+     */
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
         for (Review review : reviews) {
-            review.setRestaurant(this);
+            review.setRestaurant(this); // 각 Review 엔티티의 restaurant 필드 설정
         }
     }
 
-    //음식점 평점 업데이트 로직
+    /**
+     * 음식점의 평균 평점을 업데이트합니다.
+     *
+     * @param totalRating 총 평점 합계
+     * @param reviewCount 리뷰 개수
+     */
     public void updateRating(int totalRating, int reviewCount) {
         double avg = (double) totalRating / reviewCount;
-
         String stringAvg = String.format("%.2f", avg);
-
-        this.avgRating = stringAvg;
+        this.avgRating = stringAvg; // 평균 평점 문자열로 설정
     }
 }

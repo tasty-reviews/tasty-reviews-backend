@@ -1,5 +1,6 @@
 package com.tasty.reviews.tastyreviews.global.jwt.controller;
 
+// 패키지 및 임포트 선언
 import com.tasty.reviews.tastyreviews.global.jwt.service.JWTUtil;
 import com.tasty.reviews.tastyreviews.global.jwt.damain.RefreshEntity;
 import com.tasty.reviews.tastyreviews.global.jwt.repository.RefreshRepository;
@@ -29,7 +30,6 @@ public class ReissueController { // 토큰 재발급 컨트롤러
         String refresh = null;
         Cookie[] cookies = request.getCookies(); // 요청에서 쿠키를 가져옴
         for (Cookie cookie : cookies) {
-
             if (cookie.getName().equals("refresh")) { // 쿠키 이름이 "refresh"인 쿠키를 찾음
                 refresh = cookie.getValue(); // 리프레시 토큰 값 설정
             }
